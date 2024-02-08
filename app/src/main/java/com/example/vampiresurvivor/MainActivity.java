@@ -7,22 +7,24 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.vampiresurvivor.model.GameSurfaceView;
 import com.example.vampiresurvivor.model.JoyStickView;
+import com.example.vampiresurvivor.model.MapGenerator;
 
 public class MainActivity extends AppCompatActivity implements JoyStickView.JoyStickListener {
 
     private JoyStickView joystick;
-    private TextView txvCoord;
+    private GameSurfaceView gsv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         joystick = findViewById(R.id.joystick);
-        txvCoord = findViewById(R.id.textView);
-
-        joystick.addListener(this);
-
+        //txvCoord = findViewById(R.id.textView);
+        gsv = findViewById(R.id.gsv);
+        gsv.setJoystick(joystick);
+        //joystick.addListener(this)
 
     }
 

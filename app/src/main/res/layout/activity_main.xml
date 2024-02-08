@@ -14,7 +14,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="000"
         android:textSize="20dp"/>
-    <com.example.vampiresurvivor.model.PaintView
+    <com.example.vampiresurvivor.model.GameSurfaceView
+        android:id="@+id/gsv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

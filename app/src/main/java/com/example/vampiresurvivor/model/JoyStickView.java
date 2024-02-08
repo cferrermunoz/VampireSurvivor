@@ -45,7 +45,7 @@ public class JoyStickView extends View implements ViewTreeObserver.OnGlobalLayou
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(10);
         pJ = new Paint();
-        pJ.setColor(Color.BLUE);
+        pJ.setColor(Color.TRANSPARENT);
         pJ.setStyle(Paint.Style.FILL);
         pBack = new Paint();
         pBack.setColor(Color.RED);
@@ -104,7 +104,7 @@ public class JoyStickView extends View implements ViewTreeObserver.OnGlobalLayou
         double DistanciaMax = mida/2 - radiJ;
         Point vector = new Point(pJoystick.x-centre.x,pJoystick.y-centre.y);
         float escala = (float) (1/DistanciaMax);
-        return new PointF(vector.x*escala,vector.y*escala*(-1));
+        return new PointF(vector.x*escala,vector.y*escala);
     }
 
 
