@@ -45,10 +45,10 @@ public class JoyStickView extends View implements ViewTreeObserver.OnGlobalLayou
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(10);
         pJ = new Paint();
-        pJ.setColor(Color.TRANSPARENT);
+        pJ.setColor(Color.BLUE);
         pJ.setStyle(Paint.Style.FILL);
         pBack = new Paint();
-        pBack.setColor(Color.RED);
+        pBack.setColor(Color.TRANSPARENT);
         getViewTreeObserver().addOnGlobalLayoutListener(this);
         //============
     }

@@ -51,9 +51,6 @@ public class MapGenerator {
                     Rect rectTile = new Rect(p.x, p.y, p.x+TILE_SIZE, p.y+TILE_SIZE);
                     Rect rectScenario = new Rect(i*SCREEN_TILE_SIZE, j*SCREEN_TILE_SIZE, (i+1)*SCREEN_TILE_SIZE, (i+1)*SCREEN_TILE_SIZE);
                     canvas.drawBitmap(tiles, rectTile, rectScenario, null);
-
-                    //desar escenari
-
                 }
             }
 
