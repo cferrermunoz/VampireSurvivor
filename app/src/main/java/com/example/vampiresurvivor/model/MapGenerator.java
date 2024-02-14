@@ -29,27 +29,31 @@ public class MapGenerator {
         if (scenarioFile.exists()){
             scenario = BitmapFactory.decodeFile(scenarioFile.getAbsolutePath());
         } else {
-            map = BitmapFactory.decodeResource(r, R.drawable.map_mini);
-            tiles = BitmapFactory.decodeResource(r, R.drawable.terrain);
-            scenario = Bitmap.createBitmap(map.getWidth()*SCREEN_TILE_SIZE,
-                    map.getHeight()*SCREEN_TILE_SIZE,
+            this.map = BitmapFactory.decodeResource(r, R.drawable.map);
+            this.tiles = BitmapFactory.decodeResource(r, R.drawable.terrain);
+            this.scenario = Bitmap.createBitmap(map.getWidth()*TILE_SIZE, map.getHeight()*TILE_SIZE,
                     Bitmap.Config.RGB_565);
+
             Canvas canvas = new Canvas(scenario);
             Map<Color, Point> mapping = new HashMap<>();
             mapping.put(Color.valueOf(0,0,0), new Point(0,0));
             mapping.put(Color.valueOf(0,0,1), new Point(192,256));
             mapping.put(Color.valueOf(0,1,0), new Point(320,192));
             mapping.put(Color.valueOf(1,0,0), new Point(0,64));
-            for(int i = 0; i < map.getWidth(); i++) {
-                for(int j = 0; j < map.getHeight(); j++) {
+
+            for (int i = 0; i < map.getWidth(); i++) {
+                for (int j = 0; j < map.getHeight(); j++) {
                     Color c = map.getColor(i,j);
+                    //0: gespa
+                    //1: blau  aigua (192,256)
+                    //2: verd: arbres (320, 192)
                     Point p = mapping.get(c);
                     if (p==null){
                         p = mapping.get(Color.valueOf(0,0,0));
                     }
-                    //Log.d("XXX", "Color: "+c.toString()+" Point: "+p.toString());
-                    Rect rectTile = new Rect(p.x, p.y, p.x+TILE_SIZE, p.y+TILE_SIZE);
-                    Rect rectScenario = new Rect(i*SCREEN_TILE_SIZE, j*SCREEN_TILE_SIZE, (i+1)*SCREEN_TILE_SIZE, (i+1)*SCREEN_TILE_SIZE);
+                    Rect rectTile = new Rect(p.x, p.y, p.x + TILE_SIZE, p.y + TILE_SIZE);
+                    Rect rectScenario = new Rect(i*TILE_SIZE, j*TILE_SIZE,
+                            (i+1)*TILE_SIZE, (j+1)*TILE_SIZE);
                     canvas.drawBitmap(tiles, rectTile, rectScenario, null);
                 }
             }

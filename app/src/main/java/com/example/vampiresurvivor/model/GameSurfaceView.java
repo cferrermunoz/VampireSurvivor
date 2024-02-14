@@ -1,5 +1,7 @@
 package com.example.vampiresurvivor.model;
 
+import static androidx.core.math.MathUtils.clamp;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,19 +21,21 @@ import androidx.annotation.NonNull;
 import com.example.vampiresurvivor.R;
 
 public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
-    private static final int speed = 10;
+    //private static final int speed = 10;
     private GameThread gameThread;
     private JoyStickView joystick;
-    private Bitmap spritePj;
-    private int spritePjW, spritePjH;
-    private int spritePjFrames;
-    private boolean isMoving;
+    private CharacterGo player;
+    //private Bitmap spritePj;
+    //private int spritePjW, spritePjH;
+    //private int spritePjFrames;
+    //private boolean isMoving;
     private int spritePjCurrentFrame;
-    Point p = new Point(300, 300);
+//    Point p = new Point(300, 300);
     Paint paint = new Paint();
     Paint pBackground = new  Paint();
     private MapGenerator map;
     private int w,h;
+    private int W,H;
     private static final int ESCALA = 2;
 
     public GameSurfaceView(Context context){
@@ -42,12 +46,11 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         super(context, as);
         this.getHolder().addCallback(this);
         pintar();
-        spritePj = BitmapFactory.decodeResource(getResources(), R.drawable.amongus_sprites);
-        spritePjFrames = 4;
-        spritePjW = spritePj.getWidth() / spritePjFrames;
-        spritePjH = spritePj.getHeight();
-
         map = new MapGenerator(getResources(), this.getContext());
+        w = map.getScenario().getWidth();
+        h = map.getScenario().getHeight();
+
+        player = new CharacterGo(this);
     }
 
     public void pintar(){
@@ -80,40 +83,41 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void paint(Canvas canvas) {
+        Point screenCorner = getScreenCoordinates();
+
         //canvas.drawPaint(pBackground);
         canvas.drawBitmap(map.getScenario(),
-                p.x-w/2, p.y-h/2, null);;
+                new Rect(screenCorner.x, screenCorner.y,
+                        screenCorner.x+w, screenCorner.y+h),
+                new Rect(0,0, w, h), null);
         //canvas.drawCircle(p.x, p.y, 40, paint);
-        canvas.drawBitmap(spritePj,
-                new Rect((spritePjCurrentFrame-1)*spritePjW,0,spritePjCurrentFrame*spritePjW, spritePjH),
-                //new Rect(p.x, p.y, p.x+spritePjW*7, p.y+spritePjH*7),
-                new RectF(w/2-spritePjW*0.5f*ESCALA, h/2-spritePjH*0.5f*ESCALA, w/2+spritePjW*0.5f*ESCALA, h/2+spritePjH*0.5f*ESCALA),
-                pBackground);
+
+        player.paint(canvas);
     }
 
     public void update() {
-        if(joystick !=null){
-            PointF dir = joystick.getSpeed();
-            p.x-=dir.x*speed;
-            p.y-=dir.y*speed;
+        player.update();
+    }
 
-            boolean isMovingNext = Math.abs(dir.x)>0.001 || Math.abs(dir.y) > 0.001;
+    public JoyStickView getJoystick() {
+        return joystick;
+    }
 
-            if (!isMoving && isMovingNext) {
-                spritePjCurrentFrame = 1;
-            }
+    private Point getScreenCoordinates(){
+        Point coordCorner = new Point();
+        coordCorner.x = player.getPosition().x - w/2;
+        coordCorner.y = player.getPosition().y - h/2;
 
-            isMoving = isMovingNext;
+        coordCorner.x = clamp(coordCorner.x, 0, W-w);
+        coordCorner.y = clamp(coordCorner.y, 0, H-h);
+        return coordCorner;
+    }
 
-            if(isMoving) {
-                spritePjCurrentFrame++;
-                if (spritePjCurrentFrame > spritePjFrames) {
-                    spritePjCurrentFrame = 2;
-                }
-            } else {
-                spritePjCurrentFrame = 1;
-            }
-
-        }
+    public Point getScreenCoordPj(){
+        Point coordScreen = new Point();
+        Point screenCorner = getScreenCoordinates();
+        coordScreen.x = player.getPosition().x - screenCorner.x;
+        coordScreen.y = player.getPosition().y - screenCorner.y;
+        return coordScreen;
     }
 }
