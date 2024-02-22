@@ -1,42 +1,37 @@
-package com.example.vampiresurvivor.model;
+package com.example.vampiresurvivor.view;
 
 import static androidx.core.math.MathUtils.clamp;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
-import com.example.vampiresurvivor.R;
+import com.example.vampiresurvivor.model.BatGO;
+import com.example.vampiresurvivor.model.CharacterGO;
+import com.example.vampiresurvivor.model.GameObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     //private static final int speed = 10;
     private GameThread gameThread;
     private JoyStickView joystick;
-    private CharacterGo player;
-    //private Bitmap spritePj;
-    //private int spritePjW, spritePjH;
-    //private int spritePjFrames;
-    //private boolean isMoving;
-    private int spritePjCurrentFrame;
-//    Point p = new Point(300, 300);
+    private CharacterGO player;
+    private List<GameObject> gameObjects = new ArrayList<>();
     Paint paint = new Paint();
     Paint pBackground = new  Paint();
     private MapGenerator map;
     private int w,h;
     private int W,H;
-    private static final int ESCALA = 2;
 
     public GameSurfaceView(Context context){
         super(context, null);
@@ -47,10 +42,16 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         this.getHolder().addCallback(this);
         pintar();
         map = new MapGenerator(getResources(), this.getContext());
-        w = map.getScenario().getWidth();
-        h = map.getScenario().getHeight();
+        W = map.getScenario().getWidth();
+        H = map.getScenario().getHeight();
 
-        player = new CharacterGo(this);
+        player = new CharacterGO(this);
+        gameObjects.add(player);
+        gameObjects.add(new BatGO(this, new Point(100, 100)));
+        gameObjects.add(new BatGO(this, new Point(100, 500)));
+        gameObjects.add(new BatGO(this, new Point(500, 500)));
+        gameObjects.add(new BatGO(this, new Point(500, 100)));
+
     }
 
     public void pintar(){
@@ -83,27 +84,35 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void paint(Canvas canvas) {
-        Point screenCorner = getScreenCoordinates();
-
-        //canvas.drawPaint(pBackground);
+        Point screenCorner = getScreenCornerCoordinates();
         canvas.drawBitmap(map.getScenario(),
                 new Rect(screenCorner.x, screenCorner.y,
                         screenCorner.x+w, screenCorner.y+h),
                 new Rect(0,0, w, h), null);
-        //canvas.drawCircle(p.x, p.y, 40, paint);
-
-        player.paint(canvas);
+        for (GameObject go : gameObjects){
+            go.paint(canvas);
+        }
     }
 
     public void update() {
-        player.update();
+        for (GameObject go : gameObjects){
+            go.update();
+        }
     }
 
     public JoyStickView getJoystick() {
         return joystick;
     }
 
-    private Point getScreenCoordinates(){
+    public Point getScreenCoordinates(Point posicio){
+        Point coordCorner = new Point();
+        Point screenCorner = getScreenCornerCoordinates();
+        coordCorner.x = posicio.x - screenCorner.x;
+        coordCorner.y = posicio.y - screenCorner.y;
+        return coordCorner;
+    }
+
+    private Point getScreenCornerCoordinates(){
         Point coordCorner = new Point();
         coordCorner.x = player.getPosition().x - w/2;
         coordCorner.y = player.getPosition().y - h/2;
@@ -113,11 +122,11 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         return coordCorner;
     }
 
-    public Point getScreenCoordPj(){
-        Point coordScreen = new Point();
-        Point screenCorner = getScreenCoordinates();
-        coordScreen.x = player.getPosition().x - screenCorner.x;
-        coordScreen.y = player.getPosition().y - screenCorner.y;
-        return coordScreen;
+    public Point getPlayerPosition(){
+        return player.getPosition();
+    }
+
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
     }
 }

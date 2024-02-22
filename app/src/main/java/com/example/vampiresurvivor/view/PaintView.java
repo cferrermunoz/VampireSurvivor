@@ -1,4 +1,4 @@
-package com.example.vampiresurvivor.model;
+package com.example.vampiresurvivor.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

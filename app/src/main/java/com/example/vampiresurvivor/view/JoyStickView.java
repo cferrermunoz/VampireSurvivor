@@ -1,4 +1,4 @@
-package com.example.vampiresurvivor.model;
+package com.example.vampiresurvivor.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
+
+import com.example.vampiresurvivor.view.Utils;
 
 public class JoyStickView extends View implements ViewTreeObserver.OnGlobalLayoutListener {
 

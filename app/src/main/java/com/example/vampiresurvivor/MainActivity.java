@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
-import com.example.vampiresurvivor.model.GameSurfaceView;
-import com.example.vampiresurvivor.model.JoyStickView;
-import com.example.vampiresurvivor.model.MapGenerator;
+import com.example.vampiresurvivor.view.GameSurfaceView;
+import com.example.vampiresurvivor.view.JoyStickView;
 
 public class MainActivity extends AppCompatActivity implements JoyStickView.JoyStickListener {
 

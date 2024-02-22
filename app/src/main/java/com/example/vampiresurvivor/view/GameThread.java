@@ -1,7 +1,9 @@
-package com.example.vampiresurvivor.model;
+package com.example.vampiresurvivor.view;
 
 import android.graphics.Canvas;
 import android.util.Log;
+
+import com.example.vampiresurvivor.view.GameSurfaceView;
 
 public class GameThread extends Thread{
     GameSurfaceView gsv;
