@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
+import com.example.vampiresurvivor.view.Utils;
 
 public class CharacterGO extends SpriteGO {
     private static final int SPEED = 10;
@@ -31,7 +32,8 @@ public class CharacterGO extends SpriteGO {
         super(gsv);
 
         sprites.put("idle", new SpriteInfo(R.drawable.player_sprite_idle, 1));
-        sprites.put("walk", new SpriteInfo(R.drawable.player_sprite_walk, 5));
+        sprites.put("walk", new SpriteInfo(R.drawable.player_sprite_walk, 3));
+        sprites.put("run", new SpriteInfo(R.drawable.amongus_sprites, 5));
         setState("idle");
     }
 
@@ -73,7 +75,11 @@ public class CharacterGO extends SpriteGO {
             boolean isMovingNext = Math.abs(dir.x) > 0.001 || Math.abs(dir.y) > 0.001;
 
             if (isMovingNext) {
-                setState("walk");
+                if (Utils.getModule(dir)>=0.75d){
+                    setState("run");
+                } else {
+                    setState("walk");
+                }
             } else {
                 setState("idle");
             }
@@ -94,7 +100,7 @@ public class CharacterGO extends SpriteGO {
     }
     @Override
     public void paint(Canvas canvas) {
-        //if (life >= 0)
+        if (life >= 0)
             super.paint(canvas);
     }
 
