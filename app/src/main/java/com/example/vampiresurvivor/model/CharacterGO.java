@@ -38,31 +38,27 @@ public class CharacterGO extends SpriteGO {
     }
 
 
-
     @Override
     public void update() {
         super.update();
 
-        if (count > 0){
+        if (count > 0) {
             count--;
         }
 
-        for(GameObject go: gsv.getGameObjects()){
-            if (go instanceof BatGO){
-                BatGO bat = (BatGO) go;
-                if (RectF.intersects(bat.getHitBox(), getHitBox())){
-                    if (count == 0){
-                        life--;
-                        if (life == 0){
-                            Log.i("Vida", "Has muerto");
-                        }
-                        else {
-                            count = 60;
-                            Log.d("Vida", "Vida: " + life);
-                        }
+        for (GameObject go : gsv.getBats()) {
+            if (RectF.intersects(go.getHitBox(), getHitBox())) {
+                if (count == 0) {
+                    life--;
+                    if (life == 0) {
+                        Log.i("Vida", "Has muerto");
+                    } else {
+                        count = 60;
+                        Log.d("Vida", "Vida: " + life);
                     }
                 }
             }
+
         }
 
         if (gsv.getJoystick() != null) {
@@ -75,7 +71,7 @@ public class CharacterGO extends SpriteGO {
             boolean isMovingNext = Math.abs(dir.x) > 0.001 || Math.abs(dir.y) > 0.001;
 
             if (isMovingNext) {
-                if (Utils.getModule(dir)>=0.75d){
+                if (Utils.getModule(dir) >= 0.75d) {
                     setState("run");
                 } else {
                     setState("walk");
@@ -98,6 +94,7 @@ public class CharacterGO extends SpriteGO {
 
         }
     }
+
     @Override
     public void paint(Canvas canvas) {
         if (life >= 0)

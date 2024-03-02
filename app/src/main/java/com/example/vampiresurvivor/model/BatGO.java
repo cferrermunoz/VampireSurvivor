@@ -9,9 +9,7 @@ import com.example.vampiresurvivor.view.GameSurfaceView;
 import com.example.vampiresurvivor.view.Utils;
 
 public class BatGO extends SpriteGO {
-    private static final int SPEED = 7;
-    private int spritePjCurrentFrame;
-    private boolean isMoving;
+    private static final int SPEED = 5;
 
     @Override
     public float getEscala() {

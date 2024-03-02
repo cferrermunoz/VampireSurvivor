@@ -16,7 +16,9 @@ import androidx.annotation.NonNull;
 
 import com.example.vampiresurvivor.model.BatGO;
 import com.example.vampiresurvivor.model.CharacterGO;
+import com.example.vampiresurvivor.model.DaggerGO;
 import com.example.vampiresurvivor.model.GameObject;
+import com.example.vampiresurvivor.model.VampireGO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,9 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private GameThread gameThread;
     private JoyStickView joystick;
     private CharacterGO player;
-    private List<GameObject> gameObjects = new ArrayList<>();
+    private List<BatGO> bats = new ArrayList<>();
+    private List<DaggerGO> daggers = new ArrayList<>();
+    private List<VampireGO> vampires = new ArrayList();
     Paint paint = new Paint();
     Paint pBackground = new  Paint();
     private MapGenerator map;
@@ -46,11 +50,13 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         H = map.getScenario().getHeight();
 
         player = new CharacterGO(this);
-        gameObjects.add(player);
-        gameObjects.add(new BatGO(this, new Point(100, 100)));
-        gameObjects.add(new BatGO(this, new Point(100, 500)));
-        gameObjects.add(new BatGO(this, new Point(500, 500)));
-        gameObjects.add(new BatGO(this, new Point(500, 100)));
+
+        bats.add(new BatGO(this, new Point(100, 0)));
+        bats.add(new BatGO(this, new Point(200, 0)));
+        bats.add(new BatGO(this, new Point(300, 0)));
+        bats.add(new BatGO(this, new Point(400, 0)));
+
+        daggers.add(new DaggerGO(this));
 
     }
 
@@ -89,15 +95,25 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                 new Rect(screenCorner.x, screenCorner.y,
                         screenCorner.x+w, screenCorner.y+h),
                 new Rect(0,0, w, h), null);
-        for (GameObject go : gameObjects){
+        for (GameObject go : bats){
             go.paint(canvas);
         }
+        for (GameObject go : daggers){
+            go.paint(canvas);
+        }
+
+        player.paint(canvas);
     }
 
     public void update() {
-        for (GameObject go : gameObjects){
+        for (GameObject go : bats){
             go.update();
         }
+        for (GameObject go : bats){
+            go.update();
+        }
+
+        player.update();
     }
 
     public JoyStickView getJoystick() {
@@ -126,7 +142,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         return player.getPosition();
     }
 
-    public List<GameObject> getGameObjects() {
-        return gameObjects;
+    public List<BatGO> getBats() {
+        return bats;
     }
 }
