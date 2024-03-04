@@ -15,10 +15,10 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 
 import com.example.vampiresurvivor.model.BatGO;
+import com.example.vampiresurvivor.model.BigEnemy;
 import com.example.vampiresurvivor.model.CharacterGO;
 import com.example.vampiresurvivor.model.DaggerGO;
 import com.example.vampiresurvivor.model.GameObject;
-import com.example.vampiresurvivor.model.VampireGO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private CharacterGO player;
     private List<BatGO> bats = new ArrayList<>();
     private List<DaggerGO> daggers = new ArrayList<>();
-    private List<VampireGO> vampires = new ArrayList();
+    private List<BigEnemy> vampires = new ArrayList();
     Paint paint = new Paint();
     Paint pBackground = new  Paint();
     private MapGenerator map;
@@ -55,7 +55,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         bats.add(new BatGO(this, new Point(200, 0)));
         bats.add(new BatGO(this, new Point(300, 0)));
         bats.add(new BatGO(this, new Point(400, 0)));
-
+        vampires.add(new BigEnemy(this, new Point(100, 0)));
         daggers.add(new DaggerGO(this));
 
     }
@@ -98,10 +98,13 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         for (GameObject go : bats){
             go.paint(canvas);
         }
+        for (GameObject go : vampires){
+            go.paint(canvas);
+        }
         for (GameObject go : daggers){
             go.paint(canvas);
         }
-
+        
         player.paint(canvas);
     }
 
@@ -109,7 +112,10 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         for (GameObject go : bats){
             go.update();
         }
-        for (GameObject go : bats){
+        for (GameObject go : vampires){
+            go.update();
+        }
+        for (GameObject go : daggers){
             go.update();
         }
 
@@ -144,5 +150,25 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     public List<BatGO> getBats() {
         return bats;
+    }
+
+    public void deleteDagger(DaggerGO dagger){
+        daggers.remove(dagger);
+    }
+
+    public void deleteBat(BatGO bat){
+        bats.remove(bat);
+    }
+
+    public boolean isCollision(GameObject go1, GameObject go2){
+        return go1.getHitBox().intersect(go2.getHitBox());
+    }
+
+    public void deleteVampire(BigEnemy vampire){
+        vampires.remove(vampire);
+    }
+
+    public Boolean isInsideMap(Point posicio){
+        return posicio.x >= 0 && posicio.x <= W && posicio.y >= 0 && posicio.y <= H;
     }
 }

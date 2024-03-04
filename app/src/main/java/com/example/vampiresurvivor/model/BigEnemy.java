@@ -2,23 +2,22 @@ package com.example.vampiresurvivor.model;
 
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.RectF;
 
 import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
 import com.example.vampiresurvivor.view.Utils;
 
-public class BatGO extends SpriteGO {
+public class BigEnemy extends SpriteGO{
     private static final int SPEED = 5;
-
-    public BatGO(GameSurfaceView gsv, Point posicion) {
+    public BigEnemy(GameSurfaceView gsv, Point posicion) {
         super(gsv);
 
-        sprites.put("fly", new SpriteInfo(R.drawable.bat_sheet_r, 9));
-        setState("fly");
+        sprites.put("walk", new SpriteInfo(R.drawable.big_enemy, 4));
+        setState("walk");
 
         posSprite = posicion;
     }
+
     @Override
     public float getEscala() {
         return 4;
@@ -43,5 +42,4 @@ public class BatGO extends SpriteGO {
         posSprite.x += v.x * SPEED;
         posSprite.y += v.y * SPEED;
     }
-
 }
