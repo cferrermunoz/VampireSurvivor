@@ -53,6 +53,7 @@ public class DaggerGO extends GameObject{
         if(!gsv.isInsideMap(posSprite)){
             gsv.deleteDagger(this);
         }
+
     }
 
     @Override

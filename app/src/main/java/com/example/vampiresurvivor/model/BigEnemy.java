@@ -2,6 +2,7 @@ package com.example.vampiresurvivor.model;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
@@ -9,13 +10,16 @@ import com.example.vampiresurvivor.view.Utils;
 
 public class BigEnemy extends SpriteGO{
     private static final int SPEED = 5;
+    private int count = 200;
+    private PointF direction;
+
     public BigEnemy(GameSurfaceView gsv, Point posicion) {
         super(gsv);
 
         sprites.put("walk", new SpriteInfo(R.drawable.big_enemy, 4));
         setState("walk");
-
         posSprite = posicion;
+        direction = new PointF(0,0);
     }
 
     @Override
@@ -32,14 +36,23 @@ public class BigEnemy extends SpriteGO{
     @Override
     public void update() {
         super.update();
-        Point playerPos = gsv.getPlayerPosition();
-        PointF v = new PointF(playerPos.x - posSprite.x, playerPos.y - posSprite.y);
-        double distancia = Utils.getDistancia(posSprite, playerPos);
-        if (distancia > 0) {
-            v.x /= distancia;
-            v.y /= distancia;
+        if (count > 0) {
+            count--;
+        } else  {
+            count = 200;
+            reassignDirection();
         }
-        posSprite.x += v.x * SPEED;
-        posSprite.y += v.y * SPEED;
+
+        posSprite.x = (int) (posSprite.x+direction.x);
+        posSprite.y = (int) (posSprite.y+direction.y);
+        if(!gsv.isInsideMap(posSprite)){
+            gsv.deleteVampire(this);
+        }
+
+    }
+
+    public void reassignDirection(){
+        Point p = gsv.getRandomPoint();
+        direction = new PointF(p.x,p.y);
     }
 }

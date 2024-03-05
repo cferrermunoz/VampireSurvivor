@@ -36,6 +36,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private MapGenerator map;
     private int w,h;
     private int W,H;
+    private int count = 0;
 
     public GameSurfaceView(Context context){
         super(context, null);
@@ -55,7 +56,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         bats.add(new BatGO(this, new Point(200, 0)));
         bats.add(new BatGO(this, new Point(300, 0)));
         bats.add(new BatGO(this, new Point(400, 0)));
-        vampires.add(new BigEnemy(this, new Point(100, 0)));
+        vampires.add(new BigEnemy(this, new Point(100, 100)));
         daggers.add(new DaggerGO(this));
 
     }
@@ -120,6 +121,15 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         }
 
         player.update();
+
+        count++;
+//        if (count%100 == 0){
+//            vampires.add(new BigEnemy(this, getRandomPoint()));
+//        } else if (count%50 == 0){
+//            bats.add(new BatGO(this, getRandomPoint()));
+//        } else if (count%10 == 0){
+//            daggers.add(new DaggerGO(this));
+//        }
     }
 
     public JoyStickView getJoystick() {
@@ -170,5 +180,9 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     public Boolean isInsideMap(Point posicio){
         return posicio.x >= 0 && posicio.x <= W && posicio.y >= 0 && posicio.y <= H;
+    }
+
+    public Point getRandomPoint() {
+        return new Point((int) (Math.random()*W), (int) (Math.random()*H));
     }
 }

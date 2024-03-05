@@ -50,11 +50,11 @@ public abstract class SpriteGO extends GameObject {
         float x = getDirection().x;
         if (x==0){
             x = lastSeenX;
-            //canvas.scale(-1,1, posPjScreen.x, posPjScreen.y);
+
         }
         else {
             lastSeenX = x;
-            //canvas.scale(1,1, posPjScreen.x, posPjScreen.y);
+
         }
         if (x < 0){
             canvas.scale(-1,1, posPjScreen.x, posPjScreen.y);
@@ -70,8 +70,6 @@ public abstract class SpriteGO extends GameObject {
                         , (s.currentFrame + 1) * s.w, s.h),
                 /*new Rect(p.x, p.y, p.x+spritePjW*4, p.y+spritePjH*4)*/
                 hitbox, null);
-
-
         canvas.restore();
     }
 

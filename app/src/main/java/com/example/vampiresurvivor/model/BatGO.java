@@ -42,6 +42,9 @@ public class BatGO extends SpriteGO {
         }
         posSprite.x += v.x * SPEED;
         posSprite.y += v.y * SPEED;
+        if(!gsv.isInsideMap(posSprite)){
+            gsv.deleteBat(this);
+        }
     }
 
 }

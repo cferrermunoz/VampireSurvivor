@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements JoyStickView.JoyS
         setContentView(R.layout.activity_main);
 
         joystick = findViewById(R.id.joystick);
-        //txvCoord = findViewById(R.id.textView);
+
         gsv = findViewById(R.id.gsv);
         gsv.setJoystick(joystick);
         //joystick.addListener(this)
@@ -28,6 +28,6 @@ public class MainActivity extends AppCompatActivity implements JoyStickView.JoyS
 
     @Override
     public void onJoystickMoved(PointF speed) {
-        Log.d("XXX", ">"+speed.x + " " + speed.y);
+//        Log.d("XXX", ">"+speed.x + " " + speed.y);
     }
 }
