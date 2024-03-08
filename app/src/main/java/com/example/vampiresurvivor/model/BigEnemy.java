@@ -10,8 +10,9 @@ import com.example.vampiresurvivor.view.Utils;
 
 public class BigEnemy extends SpriteGO{
     private static final int SPEED = 5;
-    private int count = 200;
+    private int count = 1000;
     private PointF direction;
+    private int life = 3;
 
     public BigEnemy(GameSurfaceView gsv, Point posicion) {
         super(gsv);
@@ -39,7 +40,7 @@ public class BigEnemy extends SpriteGO{
         if (count > 0) {
             count--;
         } else  {
-            count = 200;
+            count = 1000;
             reassignDirection();
         }
 
@@ -54,5 +55,13 @@ public class BigEnemy extends SpriteGO{
     public void reassignDirection(){
         Point p = gsv.getRandomPoint();
         direction = new PointF(p.x,p.y);
+    }
+
+    public void manageLife(){
+        if (life>0){
+            life--;
+        } else {
+            gsv.deleteVampire(this);
+        }
     }
 }

@@ -4,6 +4,7 @@ import static androidx.core.math.MathUtils.clamp;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ public class CharacterGO extends SpriteGO {
     private boolean isMoving;
     private int life = 5;
     private int count = 0;
+    private RectF hitbox = null;
 
     @Override
     public float getEscala() {
@@ -30,7 +32,6 @@ public class CharacterGO extends SpriteGO {
 
     public CharacterGO(GameSurfaceView gsv) {
         super(gsv);
-
         sprites.put("idle", new SpriteInfo(R.drawable.player_sprite_idle, 1));
         sprites.put("walk", new SpriteInfo(R.drawable.player_sprite_walk, 3));
         sprites.put("run", new SpriteInfo(R.drawable.amongus_sprites, 5));

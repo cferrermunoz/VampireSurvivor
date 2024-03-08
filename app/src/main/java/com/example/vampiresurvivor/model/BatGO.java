@@ -11,6 +11,7 @@ import com.example.vampiresurvivor.view.Utils;
 public class BatGO extends SpriteGO {
     private static final int SPEED = 5;
 
+
     public BatGO(GameSurfaceView gsv, Point posicion) {
         super(gsv);
 

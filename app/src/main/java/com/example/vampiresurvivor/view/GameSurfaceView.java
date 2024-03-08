@@ -30,7 +30,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private CharacterGO player;
     private List<BatGO> bats = new ArrayList<>();
     private List<DaggerGO> daggers = new ArrayList<>();
-    private List<BigEnemy> vampires = new ArrayList();
+    private List<BigEnemy> vampires = new ArrayList<>();
     Paint paint = new Paint();
     Paint pBackground = new  Paint();
     private MapGenerator map;
@@ -96,40 +96,40 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                 new Rect(screenCorner.x, screenCorner.y,
                         screenCorner.x+w, screenCorner.y+h),
                 new Rect(0,0, w, h), null);
-        for (GameObject go : bats){
-            go.paint(canvas);
+        for (int i = 0; i<bats.size();i++){
+            bats.get(i).paint(canvas);
         }
-        for (GameObject go : vampires){
-            go.paint(canvas);
+        for (int i = 0; i<vampires.size();i++){
+            vampires.get(i).paint(canvas);
         }
-        for (GameObject go : daggers){
-            go.paint(canvas);
+        for (int i = 0; i<daggers.size();i++){
+            daggers.get(i).paint(canvas);
         }
         
         player.paint(canvas);
     }
 
     public void update() {
-        for (GameObject go : bats){
-            go.update();
+        for (int i = 0; i<bats.size();i++){
+            bats.get(i).update();
         }
-        for (GameObject go : vampires){
-            go.update();
+        for (int i = 0; i<vampires.size();i++){
+            vampires.get(i).update();
         }
-        for (GameObject go : daggers){
-            go.update();
+        for (int i = 0; i<daggers.size();i++){
+            daggers.get(i).update();
         }
 
         player.update();
 
         count++;
-//        if (count%100 == 0){
-//            vampires.add(new BigEnemy(this, getRandomPoint()));
-//        } else if (count%50 == 0){
-//            bats.add(new BatGO(this, getRandomPoint()));
-//        } else if (count%10 == 0){
-//            daggers.add(new DaggerGO(this));
-//        }
+        if (count%5000 == 0){
+            vampires.add(new BigEnemy(this, getRandomPoint()));
+        } else if (count%2500 == 0){
+            bats.add(new BatGO(this, getRandomPoint()));
+        } else if (count%500 == 0){
+            daggers.add(new DaggerGO(this));
+        }
     }
 
     public JoyStickView getJoystick() {

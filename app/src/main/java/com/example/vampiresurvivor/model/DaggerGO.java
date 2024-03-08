@@ -44,21 +44,21 @@ public class DaggerGO extends GameObject{
         direction.x = (float) (direction.x/distancia)*SPEED;
         direction.y = (float) (direction.y/distancia)*SPEED;
         angle = (float) Math.atan2(direction.y, direction.x);
-        Log.d("DaggerGO", "DaggerGO: "+angle+" "+direction.x+" "+direction.y);
     }
     @Override
     public void update() {
         posSprite.x = (int) (posSprite.x+direction.x);
         posSprite.y = (int) (posSprite.y+direction.y);
+        hitbox = new RectF(posSprite.x-sprite.getWidth()/2, posSprite.y-sprite.getHeight()/2, posSprite.x+sprite.getWidth()/2, posSprite.y+sprite.getHeight()/2);
         if(!gsv.isInsideMap(posSprite)){
             gsv.deleteDagger(this);
         }
-
     }
 
     @Override
     public void paint(Canvas canvas) {
         canvas.save();
+
         Point posicioLocal = gsv.getScreenCoordinates(posSprite);
         canvas.rotate(angle, posicioLocal.x, posicioLocal.y);
         canvas.drawBitmap(sprite,
