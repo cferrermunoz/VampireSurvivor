@@ -2,6 +2,8 @@ package com.example.vampiresurvivor.model;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.example.vampiresurvivor.R;
@@ -37,6 +39,7 @@ public class BigEnemy extends SpriteGO{
     @Override
     public void update() {
         super.update();
+        //comptador per canviar la direcció
         if (count > 0) {
             count--;
         } else  {
@@ -50,18 +53,23 @@ public class BigEnemy extends SpriteGO{
             gsv.deleteVampire(this);
         }
 
+        for (GameObject go : gsv.getDaggers()) {
+            if (RectF.intersects(go.getHitBox(), getHitBox())) {
+                life--;
+                if (life == 0) {
+                    gsv.deleteVampire(this);
+                    break;
+                }
+            }
+        }
+
+        if(!gsv.isInsideMap(posSprite)){
+            gsv.deleteVampire(this);
+        }
     }
 
     public void reassignDirection(){
         Point p = gsv.getRandomPoint();
         direction = new PointF(p.x,p.y);
-    }
-
-    public void manageLife(){
-        if (life>0){
-            life--;
-        } else {
-            gsv.deleteVampire(this);
-        }
     }
 }

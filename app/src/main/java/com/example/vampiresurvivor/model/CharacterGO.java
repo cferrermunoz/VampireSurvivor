@@ -3,6 +3,9 @@ package com.example.vampiresurvivor.model;
 import static androidx.core.math.MathUtils.clamp;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -18,7 +21,10 @@ public class CharacterGO extends SpriteGO {
     private boolean isMoving;
     private int life = 5;
     private int count = 0;
-    private RectF hitbox = null;
+    private Boolean garlic = true;
+    private Paint pCircle;
+    private Paint pLife;
+
 
     @Override
     public float getEscala() {
@@ -36,6 +42,13 @@ public class CharacterGO extends SpriteGO {
         sprites.put("walk", new SpriteInfo(R.drawable.player_sprite_walk, 3));
         sprites.put("run", new SpriteInfo(R.drawable.amongus_sprites, 5));
         setState("idle");
+        pCircle = new Paint();
+        pCircle.setColor(Color.RED);
+        pCircle.setStrokeWidth(5);
+        pCircle.setStyle(Paint.Style.STROKE);
+        pLife = new Paint();
+        pLife.setColor(Color.GREEN);
+        pLife.setStyle(Paint.Style.FILL);
     }
 
 
@@ -59,13 +72,40 @@ public class CharacterGO extends SpriteGO {
                     }
                 }
             }
-
+        }
+        for (GameObject go : gsv.getVampires()) {
+            if (RectF.intersects(go.getHitBox(), getHitBox())) {
+                if (count == 0) {
+                    life--;
+                    if (life == 0) {
+                        Log.i("Vida", "Has muerto");
+                    } else {
+                        count = 60;
+                        Log.d("Vida", "Vida: " + life);
+                    }
+                }
+            }
         }
 
         if (gsv.getJoystick() != null) {
             PointF dir = gsv.getJoystick().getSpeed();
-            posSprite.x += dir.x * SPEED;
-            posSprite.y += dir.y * SPEED;
+            //mirar si està dins del mapa
+            Point newPos = new Point((int) (posSprite.x + dir.x * SPEED), (int) (posSprite.y + dir.y * SPEED));
+            if (gsv.isInsideMap(newPos)) {
+                posSprite.x += dir.x * SPEED;
+                posSprite.y += dir.y * SPEED;
+            } else {
+                //si no està dins del mapa, mirar si està a la vora
+                Point newPosX = new Point((int) (posSprite.x + dir.x * SPEED), posSprite.y);
+                Point newPosY = new Point(posSprite.x, (int) (posSprite.y + dir.y * SPEED));
+                if (gsv.isInsideMap(newPosX)) {
+                    posSprite.x += dir.x * SPEED;
+                }
+                if (gsv.isInsideMap(newPosY)) {
+                    posSprite.y += dir.y * SPEED;
+                }
+            }
+
 
             SpriteInfo s = getSpriteInfo();
 
@@ -98,8 +138,14 @@ public class CharacterGO extends SpriteGO {
 
     @Override
     public void paint(Canvas canvas) {
-        if (life >= 0)
+        if (life >= 0) {
             super.paint(canvas);
+            canvas.drawRect(posSprite.x - 50, posSprite.y - 100, (posSprite.x + 50)*life/5, posSprite.y - 80, pLife);
+            if (garlic) {
+                canvas.drawCircle(posSprite.x, posSprite.y, 500, pCircle);
+            }
+        }
+
     }
 
 }

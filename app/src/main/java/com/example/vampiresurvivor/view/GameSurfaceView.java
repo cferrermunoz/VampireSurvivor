@@ -19,6 +19,8 @@ import com.example.vampiresurvivor.model.BigEnemy;
 import com.example.vampiresurvivor.model.CharacterGO;
 import com.example.vampiresurvivor.model.DaggerGO;
 import com.example.vampiresurvivor.model.GameObject;
+import com.example.vampiresurvivor.model.GarlicGO;
+import com.example.vampiresurvivor.model.LifeGO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,8 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private List<BatGO> bats = new ArrayList<>();
     private List<DaggerGO> daggers = new ArrayList<>();
     private List<BigEnemy> vampires = new ArrayList<>();
+    private List<GarlicGO> garlics = new ArrayList<>();
+    private List<LifeGO> lifes = new ArrayList<>();
     Paint paint = new Paint();
     Paint pBackground = new  Paint();
     private MapGenerator map;
@@ -51,14 +55,6 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         H = map.getScenario().getHeight();
 
         player = new CharacterGO(this);
-
-        bats.add(new BatGO(this, new Point(100, 0)));
-        bats.add(new BatGO(this, new Point(200, 0)));
-        bats.add(new BatGO(this, new Point(300, 0)));
-        bats.add(new BatGO(this, new Point(400, 0)));
-        vampires.add(new BigEnemy(this, new Point(100, 100)));
-        daggers.add(new DaggerGO(this));
-
     }
 
     public void pintar(){
@@ -128,7 +124,13 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         } else if (count%2500 == 0){
             bats.add(new BatGO(this, getRandomPoint()));
         } else if (count%500 == 0){
-            daggers.add(new DaggerGO(this));
+            if (vampires.size()>0 || bats.size()>0){
+                daggers.add(new DaggerGO(this));
+            }
+        } else if (count%6000 == 0){
+            lifes.add(new LifeGO(this, getRandomPoint()));
+        } else if (count%10000 == 0){
+            garlics.add(new GarlicGO(this, getRandomPoint()));
         }
     }
 
@@ -157,23 +159,22 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public Point getPlayerPosition(){
         return player.getPosition();
     }
-
     public List<BatGO> getBats() {
         return bats;
+    }
+    public List<BigEnemy> getVampires() {
+        return vampires;
+    }
+    public List<DaggerGO> getDaggers() {
+        return daggers;
     }
 
     public void deleteDagger(DaggerGO dagger){
         daggers.remove(dagger);
     }
-
     public void deleteBat(BatGO bat){
         bats.remove(bat);
     }
-
-    public boolean isCollision(GameObject go1, GameObject go2){
-        return go1.getHitBox().intersect(go2.getHitBox());
-    }
-
     public void deleteVampire(BigEnemy vampire){
         vampires.remove(vampire);
     }
@@ -181,7 +182,6 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public Boolean isInsideMap(Point posicio){
         return posicio.x >= 0 && posicio.x <= W && posicio.y >= 0 && posicio.y <= H;
     }
-
     public Point getRandomPoint() {
         return new Point((int) (Math.random()*W), (int) (Math.random()*H));
     }
