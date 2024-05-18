@@ -140,7 +140,10 @@ public class CharacterGO extends SpriteGO {
     public void paint(Canvas canvas) {
         if (life >= 0) {
             super.paint(canvas);
-            canvas.drawRect(posSprite.x - 50, posSprite.y - 100, (posSprite.x + 50)*life/5, posSprite.y - 80, pLife);
+            RectF Rectlife = new RectF(posSprite.x - (float) sprites.get("idle").w / 2, posSprite.y - 100, posSprite.x + (float) sprites.get("idle").w /2, posSprite.y - 80);
+            Log.d("Vida", "Vida: " + Rectlife);
+            Log.d("Vida", "Point: " + posSprite);
+            canvas.drawRect(Rectlife, pLife);
             if (garlic) {
                 canvas.drawCircle(posSprite.x, posSprite.y, 500, pCircle);
             }
