@@ -68,7 +68,7 @@ public abstract class SpriteGO extends GameObject {
                 posPjScreen.y + s.h * 0.5f * getEscala());
         canvas.drawBitmap(s.sprite, new Rect((s.currentFrame) * s.w, 0
                         , (s.currentFrame + 1) * s.w, s.h),
-                /*new Rect(p.x, p.y, p.x+spritePjW*4, p.y+spritePjH*4)*/
+
                 hitbox, null);
         canvas.restore();
     }

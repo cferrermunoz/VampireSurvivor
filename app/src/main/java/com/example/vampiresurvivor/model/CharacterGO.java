@@ -16,14 +16,18 @@ import com.example.vampiresurvivor.view.GameSurfaceView;
 import com.example.vampiresurvivor.view.Utils;
 
 public class CharacterGO extends SpriteGO {
+
     private static final int SPEED = 10;
     private int spritePjCurrentFrame;
     private boolean isMoving;
     private int life = 5;
     private int count = 0;
-    private Boolean garlic = true;
+    private Boolean garlic = false;
     private Paint pCircle;
     private Paint pLife;
+    private int sec_garlic = 0;
+
+    private int radi_garlic = 500;
 
 
     @Override
@@ -59,8 +63,19 @@ public class CharacterGO extends SpriteGO {
         if (count > 0) {
             count--;
         }
+        if (garlic){
+            if (sec_garlic > 0) {
+                sec_garlic--;
+            } else if (sec_garlic == 0){
+                garlic = false;
+            }
+        }
 
-        for (GameObject go : gsv.getBats()) {
+
+        for (BatGO go : gsv.getBats()) {
+            if (garlic && Utils.getDistancia(posSprite, go.getPosition())<radi_garlic){
+                gsv.deleteBat(go);
+            }
             if (RectF.intersects(go.getHitBox(), getHitBox())) {
                 if (count == 0) {
                     life--;
@@ -73,10 +88,13 @@ public class CharacterGO extends SpriteGO {
                 }
             }
         }
-        for (GameObject go : gsv.getVampires()) {
+        for (BigEnemy go : gsv.getVampires()) {
+            if (garlic && Utils.getDistancia(posSprite, go.getPosition())<radi_garlic){
+                go.setLife(1);
+            }
             if (RectF.intersects(go.getHitBox(), getHitBox())) {
                 if (count == 0) {
-                    life--;
+                    life = life - 5;
                     if (life == 0) {
                         Log.i("Vida", "Has muerto");
                     } else {
@@ -86,26 +104,42 @@ public class CharacterGO extends SpriteGO {
                 }
             }
         }
+
+        for (GarlicGO go : gsv.getGarlics()) {
+            if (RectF.intersects(go.getHitBox(), getHitBox())) {
+                garlic = true;
+                gsv.deleteGarlic(go);
+                sec_garlic = 60;
+            }
+        }
+
+        for (LifeGO go : gsv.getLifes()) {
+            if (RectF.intersects(go.getHitBox(), getHitBox())) {
+                life = (int) (life * 1.5);
+                gsv.deleteLife(go);
+            }
+        }
+
 
         if (gsv.getJoystick() != null) {
             PointF dir = gsv.getJoystick().getSpeed();
             //mirar si està dins del mapa
             Point newPos = new Point((int) (posSprite.x + dir.x * SPEED), (int) (posSprite.y + dir.y * SPEED));
-            if (gsv.isInsideMap(newPos)) {
+            if (gsv.isInsideMap(newPos) && gsv.isWalkable(newPos)) {
+                //mirar si la nova posició la permet el terreny
                 posSprite.x += dir.x * SPEED;
                 posSprite.y += dir.y * SPEED;
             } else {
                 //si no està dins del mapa, mirar si està a la vora
                 Point newPosX = new Point((int) (posSprite.x + dir.x * SPEED), posSprite.y);
                 Point newPosY = new Point(posSprite.x, (int) (posSprite.y + dir.y * SPEED));
-                if (gsv.isInsideMap(newPosX)) {
+                if (gsv.isInsideMap(newPosX) && gsv.isWalkable(newPosX)) {
                     posSprite.x += dir.x * SPEED;
                 }
-                if (gsv.isInsideMap(newPosY)) {
+                if (gsv.isInsideMap(newPosY) && gsv.isWalkable(newPosY)) {
                     posSprite.y += dir.y * SPEED;
                 }
             }
-
 
             SpriteInfo s = getSpriteInfo();
 
@@ -132,7 +166,6 @@ public class CharacterGO extends SpriteGO {
             } else {
                 spritePjCurrentFrame = 1;
             }
-
         }
     }
 
@@ -140,15 +173,12 @@ public class CharacterGO extends SpriteGO {
     public void paint(Canvas canvas) {
         if (life >= 0) {
             super.paint(canvas);
-            RectF Rectlife = new RectF(posSprite.x - (float) sprites.get("idle").w / 2, posSprite.y - 100, posSprite.x + (float) sprites.get("idle").w /2, posSprite.y - 80);
-            Log.d("Vida", "Vida: " + Rectlife);
-            Log.d("Vida", "Point: " + posSprite);
+            Point p = gsv.getScreenCoordinates(posSprite);
+            RectF Rectlife = new RectF(p.x + (float) sprites.get("idle").w * 2 , p.y + 100, p.x - (float) sprites.get("idle").w * 2 , p.y + 120);
             canvas.drawRect(Rectlife, pLife);
             if (garlic) {
-                canvas.drawCircle(posSprite.x, posSprite.y, 500, pCircle);
+                canvas.drawCircle(p.x, p.y, radi_garlic, pCircle);
             }
         }
-
     }
-
 }

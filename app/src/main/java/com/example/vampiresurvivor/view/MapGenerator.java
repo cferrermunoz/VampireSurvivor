@@ -47,6 +47,7 @@ public class MapGenerator {
                     //0: gespa
                     //1: blau  aigua (192,256)
                     //2: verd: arbres (320, 192)
+                    //3: vermell: roca (0,64)
                     Point p = mapping.get(c);
                     if (p==null){
                         p = mapping.get(Color.valueOf(0,0,0));
@@ -71,5 +72,10 @@ public class MapGenerator {
 
     public Bitmap getScenario() {
         return scenario;
+    }
+
+    public boolean isWalkable(Point posicio) {
+//        return scenario.getColor(posicio.x, posicio.y).equals(Color.valueOf(0,0,0));
+        return true;
     }
 }

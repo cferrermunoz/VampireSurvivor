@@ -66,10 +66,18 @@ public class BigEnemy extends SpriteGO{
         if(!gsv.isInsideMap(posSprite)){
             gsv.deleteVampire(this);
         }
+
+        if (life<0){
+            gsv.deleteVampire(this);
+        }
     }
 
     public void reassignDirection(){
         Point p = gsv.getRandomPoint();
         direction = new PointF(p.x,p.y);
+    }
+
+    public void setLife(int valor){
+        this.life = this.life - valor;
     }
 }
