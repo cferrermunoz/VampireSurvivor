@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frm"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity2">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="140dp"
+        android:contentDescription="Tap to play"
+        android:src="@drawable/btn"
+        android:onClick="startGame"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/vampire"
+        android:layout_width="253dp"
+        android:layout_height="499dp"
+        android:layout_marginTop="144dp"
+        android:src="@drawable/vampire"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-40dp"
+        android:background="@drawable/title1"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/title2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-40dp"
+        android:background="@drawable/title2"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/bat2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="186dp"
+        android:src="@drawable/bat_sprite"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="410dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/bat3"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/bat_sprite"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="410dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/bat4"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="106dp"
+        android:src="@drawable/bat_sprite"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="410dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/bat1"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="44dp"
+        android:src="@drawable/bat_sprite"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="410dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/bat5"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="64dp"
+        android:src="@drawable/bat_sprite"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="410dp"
+        tools:ignore="MissingConstraints" />
+    <ImageView
+        android:id="@+id/bat6"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="84dp"
+        android:src="@drawable/bat_sprite"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="410dp"
+        tools:ignore="MissingConstraints" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

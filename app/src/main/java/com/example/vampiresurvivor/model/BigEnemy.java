@@ -58,7 +58,6 @@ public class BigEnemy extends SpriteGO{
                 life--;
                 if (life == 0) {
                     gsv.deleteVampire(this);
-                    break;
                 }
             }
         }

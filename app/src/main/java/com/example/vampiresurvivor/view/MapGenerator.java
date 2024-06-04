@@ -22,7 +22,6 @@ public class MapGenerator {
     private Bitmap tiles;
     private Bitmap scenario;
     private static final int TILE_SIZE = 64;
-    private static final int SCREEN_TILE_SIZE = TILE_SIZE*4;
     public MapGenerator(Resources r, Context con) {
         File folder = con.getFilesDir();
         File scenarioFile = new File(folder, "scenario.png");
@@ -74,8 +73,7 @@ public class MapGenerator {
         return scenario;
     }
 
-    public boolean isWalkable(Point posicio) {
-//        return scenario.getColor(posicio.x, posicio.y).equals(Color.valueOf(0,0,0));
-        return true;
+    public static int getTileSize() {
+        return TILE_SIZE;
     }
 }

@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import androidx.annotation.NonNull;
@@ -207,7 +208,12 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public boolean isWalkable(Point posicio){
-        return map.isWalkable(posicio);
+        int x = posicio.x / MapGenerator.getTileSize();
+        int y = posicio.y / MapGenerator.getTileSize();
+        int pixel = map.getScenario().getPixel(x, y);
+        Log.d("Pixel", "posicio: " + x + " " + y + " " + pixel + " " + Color.valueOf(0,0,0).toArgb());
+        return pixel == Color.valueOf(0,0,0).toArgb();
+//        return true;
     }
 
 
