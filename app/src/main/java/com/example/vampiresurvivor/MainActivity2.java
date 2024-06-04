@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,11 @@ public class MainActivity2 extends AppCompatActivity implements ViewTreeObserver
     private ImageView imvBat4;
     private ImageView imvBat5;
     private ImageView imvBat6;
+    private ImageView imvBat7;
+    private ImageView imvBat8;
+    private ImageView imvBat9;
+    private ImageView imvBat10;
+    private MediaPlayer mP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +57,20 @@ public class MainActivity2 extends AppCompatActivity implements ViewTreeObserver
         imvBat5.setAlpha(0.0f);
         imvBat6 = findViewById(R.id.bat6);
         imvBat6.setAlpha(0.0f);
-
+        imvBat7 = findViewById(R.id.bat7);
+        imvBat7.setAlpha(0.0f);
+        imvBat8 = findViewById(R.id.bat8);
+        imvBat8.setAlpha(0.0f);
+        imvBat9 = findViewById(R.id.bat9);
+        imvBat9.setAlpha(0.0f);
+        imvBat10 = findViewById(R.id.bat10);
+        imvBat10.setAlpha(0.0f);
+        mP = MediaPlayer.create(this, R.raw.bat_sound);
         ConstraintLayout frm = findViewById(R.id.frm);
         frm.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        if (mP != null) {
+            mP.start();
+        }
     }
 
     private Rect getDimensionsFinestra() {
@@ -67,9 +84,13 @@ public class MainActivity2 extends AppCompatActivity implements ViewTreeObserver
     }
 
     public void startGame(View view) {
+        if (mP != null) {
+            mP.stop();
+        }
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+
     }
 
     @Override
@@ -120,14 +141,7 @@ public class MainActivity2 extends AppCompatActivity implements ViewTreeObserver
         animatorFadeout.setDuration(2000);
 
 
-        AnimationDrawable bat1 = (AnimationDrawable) imvBat1.getDrawable();
-        bat1.start();
-        AnimationDrawable bat2 = (AnimationDrawable) imvBat2.getDrawable();
-        bat2.start();
-        AnimationDrawable bat3 = (AnimationDrawable) imvBat3.getDrawable();
-        bat3.start();
-        AnimationDrawable bat4 = (AnimationDrawable) imvBat4.getDrawable();
-        bat4.start();
+        iniciar_anim_bat();
         AnimatorSet animatorSetBats = new AnimatorSet();
         animatorSetBats.playTogether(
                 ObjectAnimator.ofFloat(imvBat1, "alpha", 0.0f, 1.0f),
@@ -136,19 +150,47 @@ public class MainActivity2 extends AppCompatActivity implements ViewTreeObserver
                 ObjectAnimator.ofFloat(imvBat4, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(imvBat5, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(imvBat6, "alpha", 0.0f, 1.0f),
-                ObjectAnimator.ofFloat(imvBat1, "X",  rec.width(),-imvBat1.getWidth()-50),
-                ObjectAnimator.ofFloat(imvBat2, "X", rec.width(),-imvBat1.getWidth()-100),
-                ObjectAnimator.ofFloat(imvBat3, "X", rec.width(),-imvBat1.getWidth()-150),
-                ObjectAnimator.ofFloat(imvBat4, "X", rec.width(),-imvBat1.getWidth()-20),
-                ObjectAnimator.ofFloat(imvBat5, "X", rec.width(),-imvBat1.getWidth()),
-                ObjectAnimator.ofFloat(imvBat6, "X", rec.width(),-imvBat1.getWidth()-250)
-
-
+                ObjectAnimator.ofFloat(imvBat7, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(imvBat8, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(imvBat9, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(imvBat10, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(imvBat1, "X",  rec.width()-100,-imvBat1.getWidth()-50),
+                ObjectAnimator.ofFloat(imvBat2, "X", rec.width()-50,-imvBat1.getWidth()-100),
+                ObjectAnimator.ofFloat(imvBat3, "X", rec.width()-150,-imvBat1.getWidth()-150),
+                ObjectAnimator.ofFloat(imvBat4, "X", rec.width()-200,-imvBat1.getWidth()-20),
+                ObjectAnimator.ofFloat(imvBat5, "X", rec.width(),-imvBat1.getWidth()+50),
+                ObjectAnimator.ofFloat(imvBat6, "X", rec.width(),-imvBat1.getWidth()-250),
+                ObjectAnimator.ofFloat(imvBat7, "X", rec.width(),-imvBat1.getWidth()-150),
+                ObjectAnimator.ofFloat(imvBat8, "X", rec.width(),-imvBat1.getWidth()-50),
+                ObjectAnimator.ofFloat(imvBat9, "X", rec.width(),-imvBat1.getWidth()-100),
+                ObjectAnimator.ofFloat(imvBat10, "X", rec.width(),-imvBat1.getWidth()-200)
         );
-        animatorSetBats.setDuration(4000);
+        animatorSetBats.setDuration(5000);
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playSequentially(animVampireIn, animTitleVampireIn, animTitleSurviveIn, animatorSetBats, animatorFadeout, animButton);
         animatorSet.start();
+    }
 
+    private void iniciar_anim_bat() {
+        AnimationDrawable bat1 = (AnimationDrawable) imvBat1.getDrawable();
+        bat1.start();
+        AnimationDrawable bat2 = (AnimationDrawable) imvBat2.getDrawable();
+        bat2.start();
+        AnimationDrawable bat3 = (AnimationDrawable) imvBat3.getDrawable();
+        bat3.start();
+        AnimationDrawable bat4 = (AnimationDrawable) imvBat4.getDrawable();
+        bat4.start();
+        AnimationDrawable bat5 = (AnimationDrawable) imvBat5.getDrawable();
+        bat5.start();
+        AnimationDrawable bat6 = (AnimationDrawable) imvBat6.getDrawable();
+        bat6.start();
+        AnimationDrawable bat7 = (AnimationDrawable) imvBat7.getDrawable();
+        bat7.start();
+        AnimationDrawable bat8 = (AnimationDrawable) imvBat8.getDrawable();
+        bat8.start();
+        AnimationDrawable bat9 = (AnimationDrawable) imvBat9.getDrawable();
+        bat9.start();
+        AnimationDrawable bat10 = (AnimationDrawable) imvBat10.getDrawable();
+        bat10.start();
     }
 }

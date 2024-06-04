@@ -16,20 +16,16 @@ import com.example.vampiresurvivor.view.GameSurfaceView;
 import com.example.vampiresurvivor.view.Utils;
 
 public class CharacterGO extends SpriteGO {
-
     private static final int SPEED = 10;
     private int spritePjCurrentFrame;
-    private boolean isMoving;
+    boolean isMoving;
     private int life = 5;
     private int count = 0;
     private Boolean garlic = false;
-    private Paint pCircle;
-    private Paint pLife;
+    private final Paint pCircle;
+    private final Paint pLife;
     private int sec_garlic = 0;
-
-    private int radi_garlic = 500;
-
-
+    private final int radi_garlic = 500;
     @Override
     public float getEscala() {
         return 4;

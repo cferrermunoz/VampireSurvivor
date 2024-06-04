@@ -38,6 +38,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     Paint pBackground = new  Paint();
     private MapGenerator map;
     private int w,h;
+
     private int W,H;
     private int count = 0;
 
@@ -210,10 +211,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public boolean isWalkable(Point posicio){
         int x = posicio.x / MapGenerator.getTileSize();
         int y = posicio.y / MapGenerator.getTileSize();
-        int pixel = map.getScenario().getPixel(x, y);
-        Log.d("Pixel", "posicio: " + x + " " + y + " " + pixel + " " + Color.valueOf(0,0,0).toArgb());
-        return pixel == Color.valueOf(0,0,0).toArgb();
-//        return true;
+        return map.getMap().getColor(x,y).equals(Color.valueOf(0,0,0));
     }
 
 

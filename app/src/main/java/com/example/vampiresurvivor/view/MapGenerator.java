@@ -20,13 +20,14 @@ import java.util.Map;
 public class MapGenerator {
     private Bitmap map;
     private Bitmap tiles;
-    private Bitmap scenario;
+    private final Bitmap scenario;
     private static final int TILE_SIZE = 64;
     public MapGenerator(Resources r, Context con) {
         File folder = con.getFilesDir();
         File scenarioFile = new File(folder, "scenario.png");
         if (scenarioFile.exists()){
             scenario = BitmapFactory.decodeFile(scenarioFile.getAbsolutePath());
+            this.map = BitmapFactory.decodeResource(r, R.drawable.map);
         } else {
             this.map = BitmapFactory.decodeResource(r, R.drawable.map);
             this.tiles = BitmapFactory.decodeResource(r, R.drawable.terrain);
@@ -71,6 +72,11 @@ public class MapGenerator {
 
     public Bitmap getScenario() {
         return scenario;
+    }
+
+    //null pointer exception
+    public Bitmap getMap() {
+        return map;
     }
 
     public static int getTileSize() {
