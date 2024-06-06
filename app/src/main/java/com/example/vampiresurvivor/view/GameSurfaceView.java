@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -112,34 +113,75 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     public void update() {
         for (int i = 0; i<bats.size(); i++){
-            bats.get(i).update();
+            BatGO bgo = bats.get(i);
+            bgo.update();
+            if (RectF.intersects(bgo.getHitBox(), player.getHitBox())) {
+                bats.remove(bgo);
+                player.setLife(player.getLife()-1);
+            }
+            if (player.getGarlic() && Utils.getDistancia(player.getPosition(), bgo.getPosition())<player.getRadi_garlic()){
+                bats.remove(bgo);
+            }
+
         }
         for (int i = 0; i<vampires.size(); i++){
-            vampires.get(i).update();
+            BigEnemy be = vampires.get(i);
+            be.update();
+            if (RectF.intersects(be.getHitBox(), player.getHitBox())) {
+                player.setLife(player.getLife()-3);
+                vampires.remove(be);
+            }
+            if (player.getGarlic() && Utils.getDistancia(player.getPosition(), be.getPosition())<player.getRadi_garlic())
+                be.setLife(1);
         }
         for (int i = 0; i<daggers.size(); i++){
-            daggers.get(i).update();
+            DaggerGO dgo = daggers.get(i);
+            dgo.update();
+            //i want to check if the dagger hits the bats or bigenemies
+            for (int j = 0; j<bats.size(); j++){
+                BatGO bgo = bats.get(j);
+                if (RectF.intersects(dgo.getHitBox(), bgo.getHitBox())) {
+                    bats.remove(bgo);
+                    daggers.remove(dgo);
+                }
+            }
+            for (int j = 0; j<vampires.size(); j++){
+                BigEnemy be = vampires.get(j);
+                if (RectF.intersects(dgo.getHitBox(), be.getHitBox())) {
+                    be.setLife(1);
+                    daggers.remove(dgo);
+                }
+            }
+
         }
         for (int i = 0; i<garlics.size(); i++){
-            garlics.get(i).update();
+            GarlicGO ggo = garlics.get(i);
+            ggo.update();
+            if (RectF.intersects(ggo.getHitBox(), player.getHitBox())) {
+                garlics.remove(ggo);
+                player.setGarlic(true);
+            }
         }
         for (int i = 0; i<lifes.size(); i++){
-            lifes.get(i).update();
+            LifeGO lgo = lifes.get(i);
+            if (RectF.intersects(lgo.getHitBox(), player.getHitBox())) {
+                player.setLife((int) (player.getLife() * 1.5));
+                lifes.remove(lgo);
+            }
         }
 
         player.update();
         count++;
-        if (count%5000 == 0){
+        if (count%500 == 0){
             vampires.add(new BigEnemy(this, getRandomPoint()));
-        } else if (count%2500 == 0){
+        } else if (count%250 == 0){
             bats.add(new BatGO(this, getRandomPoint()));
-        } else if (count%500 == 0){
-            if (vampires.size()>0 || bats.size()>0){
+        } else if (count%50 == 0){
+            if (!vampires.isEmpty() || !bats.isEmpty()){
                 daggers.add(new DaggerGO(this));
             }
-        } else if (count%6000 == 0){
+        } else if (count%10 == 0){
             lifes.add(new LifeGO(this, getRandomPoint()));
-        } else if (count%10000 == 0){
             garlics.add(new GarlicGO(this, getRandomPoint()));
         }
     }
@@ -215,4 +257,16 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
 
+    public void restart() {
+        player.restart();
+        bats.clear();
+        vampires.clear();
+        daggers.clear();
+        garlics.clear();
+        lifes.clear();
+    }
+
+    public void gameOver() {
+        gameThread.gameOver();
+    }
 }

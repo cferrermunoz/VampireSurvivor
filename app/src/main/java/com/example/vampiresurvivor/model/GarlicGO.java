@@ -10,7 +10,7 @@ import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
 
 public class GarlicGO extends GameObject{
-    private int Escala = 1;
+    private int Escala = 4;
     protected Point posSprite;
     private static Bitmap sprite;
     private RectF hitbox;
@@ -20,7 +20,7 @@ public class GarlicGO extends GameObject{
             Bitmap spr = BitmapFactory.decodeResource(gsv.getResources(), R.drawable.garlic);
             sprite = Bitmap.createScaledBitmap(spr, spr.getWidth() / getEscala(), spr.getHeight() / getEscala(), false);
         }
-        posSprite = pos;
+        posSprite = gsv.getScreenCoordinates(pos);
         hitbox = new RectF(posSprite.x-sprite.getWidth()/2, posSprite.y-sprite.getHeight()/2, posSprite.x+sprite.getWidth()/2, posSprite.y+sprite.getHeight()/2);
     }
 

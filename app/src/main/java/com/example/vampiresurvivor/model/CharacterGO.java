@@ -10,32 +10,81 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
 import com.example.vampiresurvivor.view.Utils;
 
 public class CharacterGO extends SpriteGO {
+    /**
+     * Velocitat del personatge
+     */
     private static final int SPEED = 10;
+    /**
+     * Vida màxima del personatge
+     */
+    private static final int MAX_LIFE = 10;
+    /**
+     * Frame actual del personatge
+     */
     private int spritePjCurrentFrame;
+    /**
+     * Indica si el personatge està en moviment
+     */
     boolean isMoving;
+    /**
+     * Vida del personatge
+     */
     private int life = 5;
-    private int count = 0;
+    /**
+     * Comptador per a la vida
+     */
+    private int count;
+    /**
+     * Indica si el personatge té all
+     */
     private Boolean garlic = false;
+    /**
+     * Pintura del cercle de l'all
+     */
     private final Paint pCircle;
+    /**
+     * Pintura de la vida
+     */
     private final Paint pLife;
+    /**
+     * Pintura del dany
+     */
+    private final Paint pNoLife;
+    /**
+     * Comptador all
+     */
     private int sec_garlic = 0;
+    /**
+     * Radi de l'efecte de l'all
+     */
     private final int radi_garlic = 500;
+    /**
+     * Retorna l'escala
+     * @return float
+     */
     @Override
     public float getEscala() {
         return 4;
     }
-
+    /**
+     * Retorna la direcció del personatge
+     * @return PointF
+     */
     @Override
     public PointF getDirection() {
         return gsv.getJoystick().getSpeed();
     }
-
+    /**
+     * Constructor del personatge
+     * @param gsv GameSurfaceView
+     */
     public CharacterGO(GameSurfaceView gsv) {
         super(gsv);
         sprites.put("idle", new SpriteInfo(R.drawable.player_sprite_idle, 1));
@@ -49,16 +98,19 @@ public class CharacterGO extends SpriteGO {
         pLife = new Paint();
         pLife.setColor(Color.GREEN);
         pLife.setStyle(Paint.Style.FILL);
+        pNoLife = new Paint();
+        pNoLife.setColor(Color.RED);
+        pNoLife.setStyle(Paint.Style.FILL);
+        this.count = 10;
     }
 
-
+    /**
+     * Actualitza el personatge
+     */
     @Override
     public void update() {
         super.update();
 
-        if (count > 0) {
-            count--;
-        }
         if (garlic){
             if (sec_garlic > 0) {
                 sec_garlic--;
@@ -67,53 +119,13 @@ public class CharacterGO extends SpriteGO {
             }
         }
 
-
-        for (BatGO go : gsv.getBats()) {
-            if (garlic && Utils.getDistancia(posSprite, go.getPosition())<radi_garlic){
-                gsv.deleteBat(go);
-            }
-            if (RectF.intersects(go.getHitBox(), getHitBox())) {
-                if (count == 0) {
-                    life--;
-                    if (life == 0) {
-                        Log.i("Vida", "Has muerto");
-                    } else {
-                        count = 60;
-                        Log.d("Vida", "Vida: " + life);
-                    }
-                }
-            }
+        if (count <= 0) {
+            life--;
+            count = 10;
+            gsv.restart();
         }
-        for (BigEnemy go : gsv.getVampires()) {
-            if (garlic && Utils.getDistancia(posSprite, go.getPosition())<radi_garlic){
-                go.setLife(1);
-            }
-            if (RectF.intersects(go.getHitBox(), getHitBox())) {
-                if (count == 0) {
-                    life = life - 5;
-                    if (life == 0) {
-                        Log.i("Vida", "Has muerto");
-                    } else {
-                        count = 60;
-                        Log.d("Vida", "Vida: " + life);
-                    }
-                }
-            }
-        }
-
-        for (GarlicGO go : gsv.getGarlics()) {
-            if (RectF.intersects(go.getHitBox(), getHitBox())) {
-                garlic = true;
-                gsv.deleteGarlic(go);
-                sec_garlic = 60;
-            }
-        }
-
-        for (LifeGO go : gsv.getLifes()) {
-            if (RectF.intersects(go.getHitBox(), getHitBox())) {
-                life = (int) (life * 1.5);
-                gsv.deleteLife(go);
-            }
+        if (life == 0) {
+            gsv.gameOver();
         }
 
 
@@ -138,9 +150,7 @@ public class CharacterGO extends SpriteGO {
             }
 
             SpriteInfo s = getSpriteInfo();
-
             boolean isMovingNext = Math.abs(dir.x) > 0.001 || Math.abs(dir.y) > 0.001;
-
             if (isMovingNext) {
                 if (Utils.getModule(dir) >= 0.75d) {
                     setState("run");
@@ -165,16 +175,48 @@ public class CharacterGO extends SpriteGO {
         }
     }
 
+
+    /**
+     * Pinta el personatge
+     * @param canvas Canvas
+     */
     @Override
     public void paint(Canvas canvas) {
         if (life >= 0) {
             super.paint(canvas);
             Point p = gsv.getScreenCoordinates(posSprite);
-            RectF Rectlife = new RectF(p.x + (float) sprites.get("idle").w * 2 , p.y + 100, p.x - (float) sprites.get("idle").w * 2 , p.y + 120);
+            RectF Rectlife = new RectF(p.x + (float) sprites.get("idle").w * 2 , p.y + 100, (p.x - (float) sprites.get("idle").w * 2) * count / MAX_LIFE, p.y + 120);
+            RectF RectNoLife = new RectF(p.x + (float) sprites.get("idle").w * 2 , p.y + 100, p.x - (float) sprites.get("idle").w * 2, p.y + 120);
+            canvas.drawRect(RectNoLife, pNoLife);
             canvas.drawRect(Rectlife, pLife);
             if (garlic) {
                 canvas.drawCircle(p.x, p.y, radi_garlic, pCircle);
             }
         }
+    }
+
+    public void restart() {
+        posSprite = new Point(100, 100);
+    }
+
+    public void setLife(int i) {
+        count = clamp(i, 0, MAX_LIFE);
+    }
+
+    public int getLife() {
+        return count;
+    }
+
+    public void setGarlic(boolean b) {
+        garlic = b;
+        this.sec_garlic = 60;
+    }
+
+    public boolean getGarlic() {
+        return garlic;
+    }
+
+    public double getRadi_garlic() {
+        return radi_garlic;
     }
 }

@@ -31,7 +31,7 @@ public class DaggerGO extends GameObject{
 
         }
         if (hitbox == null) {
-            hitbox = new RectF(0,0,sprite.getWidth(),sprite.getHeight());
+            hitbox = new RectF(0,0,sprite.getWidth()+3,sprite.getHeight()+3);
         }
         posSprite.x = gsv.getPlayerPosition().x;
         posSprite.y = gsv.getPlayerPosition().y;

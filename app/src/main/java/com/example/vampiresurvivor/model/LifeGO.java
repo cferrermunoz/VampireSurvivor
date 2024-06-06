@@ -10,7 +10,7 @@ import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
 
 public class LifeGO extends GameObject{
-    private int Escala = 1;
+    private int Escala = 3;
     protected Point posSprite;
     private static RectF hitbox;
     private static Bitmap sprite;
@@ -23,7 +23,7 @@ public class LifeGO extends GameObject{
             sprite = Bitmap.createScaledBitmap(spr, spr.getWidth() / getEscala(), spr.getHeight() / getEscala(), false);
 
         }
-        posSprite = pos;
+        posSprite = gsv.getScreenCoordinates(pos);
         hitbox = new RectF(posSprite.x-sprite.getWidth()/2, posSprite.y-sprite.getHeight()/2, posSprite.x+sprite.getWidth()/2, posSprite.y+sprite.getHeight()/2);
     }
 

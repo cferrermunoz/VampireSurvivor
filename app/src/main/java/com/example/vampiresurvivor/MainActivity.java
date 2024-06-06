@@ -22,12 +22,11 @@ public class MainActivity extends AppCompatActivity implements JoyStickView.JoyS
 
         gsv = findViewById(R.id.gsv);
         gsv.setJoystick(joystick);
-        //joystick.addListener(this)
 
     }
 
     @Override
     public void onJoystickMoved(PointF speed) {
-//        Log.d("XXX", ">"+speed.x + " " + speed.y);
+
     }
 }
