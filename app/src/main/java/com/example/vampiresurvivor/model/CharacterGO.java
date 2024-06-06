@@ -7,10 +7,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
@@ -24,7 +22,7 @@ public class CharacterGO extends SpriteGO {
     /**
      * Vida màxima del personatge
      */
-    private static final int MAX_LIFE = 10;
+    private int MAX_LIFE = 10;
     /**
      * Frame actual del personatge
      */
@@ -36,7 +34,7 @@ public class CharacterGO extends SpriteGO {
     /**
      * Vida del personatge
      */
-    private int life = 5;
+    private int life = 3;
     /**
      * Comptador per a la vida
      */
@@ -60,29 +58,37 @@ public class CharacterGO extends SpriteGO {
     /**
      * Comptador all
      */
-    private int sec_garlic = 0;
+    private int sec_garlic = 300;
     /**
      * Radi de l'efecte de l'all
      */
     private final int radi_garlic = 500;
+
+    private RectF RectLife;
+
     /**
      * Retorna l'escala
+     *
      * @return float
      */
     @Override
     public float getEscala() {
         return 4;
     }
+
     /**
      * Retorna la direcció del personatge
+     *
      * @return PointF
      */
     @Override
     public PointF getDirection() {
         return gsv.getJoystick().getSpeed();
     }
+
     /**
      * Constructor del personatge
+     *
      * @param gsv GameSurfaceView
      */
     public CharacterGO(GameSurfaceView gsv) {
@@ -111,10 +117,10 @@ public class CharacterGO extends SpriteGO {
     public void update() {
         super.update();
 
-        if (garlic){
+        if (garlic) {
             if (sec_garlic > 0) {
                 sec_garlic--;
-            } else if (sec_garlic == 0){
+            } else if (sec_garlic == 0) {
                 garlic = false;
             }
         }
@@ -133,7 +139,7 @@ public class CharacterGO extends SpriteGO {
             PointF dir = gsv.getJoystick().getSpeed();
             //mirar si està dins del mapa
             Point newPos = new Point((int) (posSprite.x + dir.x * SPEED), (int) (posSprite.y + dir.y * SPEED));
-            if (gsv.isInsideMap(newPos) && gsv.isWalkable(newPos)) {
+            if (gsv.isWalkable(newPos)) {
                 //mirar si la nova posició la permet el terreny
                 posSprite.x += dir.x * SPEED;
                 posSprite.y += dir.y * SPEED;
@@ -141,7 +147,7 @@ public class CharacterGO extends SpriteGO {
                 //si no està dins del mapa, mirar si està a la vora
                 Point newPosX = new Point((int) (posSprite.x + dir.x * SPEED), posSprite.y);
                 Point newPosY = new Point(posSprite.x, (int) (posSprite.y + dir.y * SPEED));
-                if (gsv.isInsideMap(newPosX) && gsv.isWalkable(newPosX)) {
+                if (gsv.isWalkable(newPosX)) {
                     posSprite.x += dir.x * SPEED;
                 }
                 if (gsv.isInsideMap(newPosY) && gsv.isWalkable(newPosY)) {
@@ -172,12 +178,14 @@ public class CharacterGO extends SpriteGO {
             } else {
                 spritePjCurrentFrame = 1;
             }
+            //RectLife = new RectF(posSprite.x + (float) sprites.get("idle").w * 2 , posSprite.y + 100, (posSprite.x - (float) sprites.get("idle").w * 2) * count / MAX_LIFE, posSprite.y + 120);
         }
     }
 
 
     /**
      * Pinta el personatge
+     *
      * @param canvas Canvas
      */
     @Override
@@ -185,10 +193,16 @@ public class CharacterGO extends SpriteGO {
         if (life >= 0) {
             super.paint(canvas);
             Point p = gsv.getScreenCoordinates(posSprite);
-            RectF Rectlife = new RectF(p.x + (float) sprites.get("idle").w * 2 , p.y + 100, (p.x - (float) sprites.get("idle").w * 2) * count / MAX_LIFE, p.y + 120);
-            RectF RectNoLife = new RectF(p.x + (float) sprites.get("idle").w * 2 , p.y + 100, p.x - (float) sprites.get("idle").w * 2, p.y + 120);
+            float barWidth = (float) sprites.get("idle").w * 4; // Total width of the health bar
+            float barHeight = 20; // Height of the health bar
+            // Calculate the width of the green (health) part of the bar
+            float greenBarWidth = barWidth * count / MAX_LIFE;
+            // Define the red (empty) part of the bar (full width)
+            RectF RectNoLife = new RectF(p.x - barWidth / 2, p.y + 100, p.x + barWidth / 2, p.y + 100 + barHeight);
+            // Define the green (health) part of the bar (dynamic width)
+            RectLife = new RectF(p.x - barWidth / 2, p.y + 100, p.x - barWidth / 2 + greenBarWidth, p.y + 100 + barHeight);
             canvas.drawRect(RectNoLife, pNoLife);
-            canvas.drawRect(Rectlife, pLife);
+            canvas.drawRect(RectLife, pLife);
             if (garlic) {
                 canvas.drawCircle(p.x, p.y, radi_garlic, pCircle);
             }
@@ -200,10 +214,14 @@ public class CharacterGO extends SpriteGO {
     }
 
     public void setLife(int i) {
-        count = clamp(i, 0, MAX_LIFE);
+        count = i;
     }
 
     public int getLife() {
+        return life;
+    }
+
+    public int getCount() {
         return count;
     }
 
@@ -218,5 +236,9 @@ public class CharacterGO extends SpriteGO {
 
     public double getRadi_garlic() {
         return radi_garlic;
+    }
+
+    public void setMAX_LIFE(double valor) {
+        this.MAX_LIFE *= valor;
     }
 }

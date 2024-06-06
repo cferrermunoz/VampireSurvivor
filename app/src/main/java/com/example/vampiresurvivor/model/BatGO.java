@@ -2,6 +2,7 @@ package com.example.vampiresurvivor.model;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.example.vampiresurvivor.R;
@@ -13,7 +14,6 @@ public class BatGO extends SpriteGO {
      * Velocitat de movimient
      */
     private static final int SPEED = 5;
-
     /**
      * Constructor
      * @param gsv GameSurfaceView
@@ -21,7 +21,6 @@ public class BatGO extends SpriteGO {
      */
     public BatGO(GameSurfaceView gsv, Point posicion) {
         super(gsv);
-
         sprites.put("fly", new SpriteInfo(R.drawable.bat_sheet_r, 9));
         setState("fly");
         posSprite = posicion;
@@ -64,4 +63,13 @@ public class BatGO extends SpriteGO {
         }
     }
 
+    @Override
+    public RectF getHitBox() {
+        RectF h = super.getHitBox();
+        h.left += 10;
+        h.right -= 10;
+        h.top += 10;
+        h.bottom -= 10;
+        return h;
+    }
 }

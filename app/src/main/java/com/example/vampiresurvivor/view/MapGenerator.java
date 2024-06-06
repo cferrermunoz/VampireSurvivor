@@ -9,9 +9,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
-
 import com.example.vampiresurvivor.R;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashMap;

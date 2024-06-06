@@ -50,11 +50,9 @@ public abstract class SpriteGO extends GameObject {
         float x = getDirection().x;
         if (x==0){
             x = lastSeenX;
-
         }
         else {
             lastSeenX = x;
-
         }
         if (x < 0){
             canvas.scale(-1,1, posPjScreen.x, posPjScreen.y);
@@ -94,7 +92,6 @@ public abstract class SpriteGO extends GameObject {
         public SpriteInfo(@DrawableRes int drawabledRes, int size) {
             this.sprite = BitmapFactory.decodeResource(gsv.getResources(), drawabledRes);
             this.size = size;
-
             this.w = sprite.getWidth() / size;
             this.h = sprite.getHeight();
         }
@@ -105,7 +102,6 @@ public abstract class SpriteGO extends GameObject {
                 currentFrame = (currentFrame + 1) % size;
                 fCounter = 0;
             }
-
         }
     }
 }

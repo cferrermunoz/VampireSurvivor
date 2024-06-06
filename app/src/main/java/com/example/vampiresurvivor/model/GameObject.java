@@ -12,7 +12,6 @@ public abstract class GameObject {
     }
     public abstract void update();
     public abstract void paint(Canvas canvas);
-
     public abstract RectF getHitBox();
 
 }

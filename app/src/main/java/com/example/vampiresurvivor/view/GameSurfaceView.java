@@ -1,7 +1,6 @@
 package com.example.vampiresurvivor.view;
 
 import static androidx.core.math.MathUtils.clamp;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,12 +8,14 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import androidx.annotation.NonNull;
-
+import com.example.vampiresurvivor.MainActivity;
+import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.model.BatGO;
 import com.example.vampiresurvivor.model.BigEnemy;
 import com.example.vampiresurvivor.model.CharacterGO;
@@ -39,9 +40,10 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     Paint pBackground = new  Paint();
     private MapGenerator map;
     private int w,h;
-
     private int W,H;
     private int count = 0;
+    private MediaPlayer mP_bat;
+    private MediaPlayer mP_dagger;
 
     public GameSurfaceView(Context context){
         super(context, null);
@@ -55,11 +57,14 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         W = map.getScenario().getWidth();
         H = map.getScenario().getHeight();
         player = new CharacterGO(this);
+        mP_bat = MediaPlayer.create(context, R.raw.bat_sound);
+        mP_dagger = MediaPlayer.create(context, R.raw.knife);
     }
 
     public void pintar(){
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.FILL);
+        paint.setTextSize(50);
         pBackground.setStyle(Paint.Style.FILL);
         pBackground.setColor(Color.WHITE);
     }
@@ -74,6 +79,10 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         h = getHeight();
         gameThread = new GameThread(this);
         gameThread.start();
+        mP_bat.setDisplay(surfaceHolder);
+        if (mP_bat != null && !mP_bat.isPlaying()) {
+            mP_bat.start();
+        }
     }
 
     @Override
@@ -84,6 +93,14 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
         gameThread.gameOver();
+        if (mP_bat != null) {
+            mP_bat.release();
+            mP_bat = null;
+        }
+        if (mP_dagger != null) {
+            mP_dagger.release();
+            mP_dagger = null;
+        }
     }
 
     public void paint(Canvas canvas) {
@@ -107,8 +124,9 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         for (int i = 0; i<lifes.size();i++){
             lifes.get(i).paint(canvas);
         }
-        
         player.paint(canvas);
+        canvas.drawText("Life: "+player.getLife(), 20, 45, paint);
+        canvas.drawText("HP: "+player.getCount(), 20, 95, paint);
     }
 
     public void update() {
@@ -117,7 +135,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             bgo.update();
             if (RectF.intersects(bgo.getHitBox(), player.getHitBox())) {
                 bats.remove(bgo);
-                player.setLife(player.getLife()-1);
+                player.setLife(player.getCount()-1);
             }
             if (player.getGarlic() && Utils.getDistancia(player.getPosition(), bgo.getPosition())<player.getRadi_garlic()){
                 bats.remove(bgo);
@@ -128,7 +146,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             BigEnemy be = vampires.get(i);
             be.update();
             if (RectF.intersects(be.getHitBox(), player.getHitBox())) {
-                player.setLife(player.getLife()-3);
+                player.setLife(player.getCount()-3);
                 vampires.remove(be);
             }
             if (player.getGarlic() && Utils.getDistancia(player.getPosition(), be.getPosition())<player.getRadi_garlic())
@@ -137,12 +155,12 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         for (int i = 0; i<daggers.size(); i++){
             DaggerGO dgo = daggers.get(i);
             dgo.update();
-            //i want to check if the dagger hits the bats or bigenemies
             for (int j = 0; j<bats.size(); j++){
                 BatGO bgo = bats.get(j);
                 if (RectF.intersects(dgo.getHitBox(), bgo.getHitBox())) {
                     bats.remove(bgo);
                     daggers.remove(dgo);
+                    Log.d("Intersection", "Bat");
                 }
             }
             for (int j = 0; j<vampires.size(); j++){
@@ -150,39 +168,47 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                 if (RectF.intersects(dgo.getHitBox(), be.getHitBox())) {
                     be.setLife(1);
                     daggers.remove(dgo);
+                    Log.d("Intersection", "Vampire");
                 }
             }
 
         }
         for (int i = 0; i<garlics.size(); i++){
             GarlicGO ggo = garlics.get(i);
-            ggo.update();
-            if (RectF.intersects(ggo.getHitBox(), player.getHitBox())) {
-                garlics.remove(ggo);
-                player.setGarlic(true);
+            if (player.getHitBox() != null && ggo.getHitBox() != null){
+                if (RectF.intersects(ggo.getHitBox(), player.getHitBox())) {
+                    garlics.remove(ggo);
+                    player.setGarlic(true);
+                }
             }
         }
         for (int i = 0; i<lifes.size(); i++){
             LifeGO lgo = lifes.get(i);
             if (RectF.intersects(lgo.getHitBox(), player.getHitBox())) {
-                player.setLife((int) (player.getLife() * 1.5));
+                player.setLife((int) (player.getCount() * 1.5));
+                player.setMAX_LIFE(1.5);
                 lifes.remove(lgo);
             }
         }
 
         player.update();
         count++;
-        if (count%500 == 0){
+        if (count%300 == 0){
             vampires.add(new BigEnemy(this, getRandomPoint()));
-        } else if (count%250 == 0){
+        } else if (count%150 == 0){
             bats.add(new BatGO(this, getRandomPoint()));
-        } else if (count%50 == 0){
+        } else if (count%200 == 0){
             if (!vampires.isEmpty() || !bats.isEmpty()){
                 daggers.add(new DaggerGO(this));
+                if (mP_dagger != null && !mP_dagger.isPlaying()) {
+                    mP_dagger.start();
+                }
             }
         } else if (count%10 == 0){
             lifes.add(new LifeGO(this, getRandomPoint()));
-            garlics.add(new GarlicGO(this, getRandomPoint()));
+            Point pos = new Point((int) (Math.random()*W), (int) (Math.random()*H));
+            Log.d("Garlic", pos.toString());
+            garlics.add(new GarlicGO(this, pos));
         }
     }
 
@@ -202,7 +228,6 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         Point coordCorner = new Point();
         coordCorner.x = player.getPosition().x - w/2;
         coordCorner.y = player.getPosition().y - h/2;
-
         coordCorner.x = clamp(coordCorner.x, 0, W-w);
         coordCorner.y = clamp(coordCorner.y, 0, H-h);
         return coordCorner;
@@ -214,18 +239,6 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public List<BatGO> getBats() {
         return bats;
     }
-    public List<BigEnemy> getVampires() {
-        return vampires;
-    }
-    public List<DaggerGO> getDaggers() {
-        return daggers;
-    }
-    public List<GarlicGO> getGarlics() {
-        return garlics;
-    }
-    public List<LifeGO> getLifes() {
-        return lifes;
-    }
 
     public void deleteDagger(DaggerGO dagger){
         daggers.remove(dagger);
@@ -236,23 +249,27 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void deleteVampire(BigEnemy vampire){
         vampires.remove(vampire);
     }
-    public void deleteGarlic(GarlicGO garlic){
-        garlics.remove(garlic);
-    }
-    public void deleteLife(LifeGO life){
-        lifes.remove(life);
-    }
 
+    /**
+     * Check if the position is inside the map
+     * @param posicio Point
+     * @return Boolean true if the position is inside the map
+     */
     public Boolean isInsideMap(Point posicio){
         return posicio.x >= 0 && posicio.x <= W && posicio.y >= 0 && posicio.y <= H;
     }
+    /**
+     * Gets a random point inside the screen
+     * @return Point with the position inside the screen
+     */
     public Point getRandomPoint() {
         return new Point((int) (Math.random()*W), (int) (Math.random()*H));
     }
 
     public boolean isWalkable(Point posicio){
-        int x = posicio.x / MapGenerator.getTileSize();
+        if (!isInsideMap(posicio)) return false;
         int y = posicio.y / MapGenerator.getTileSize();
+        int x = posicio.x / MapGenerator.getTileSize();
         return map.getMap().getColor(x,y).equals(Color.valueOf(0,0,0));
     }
 
@@ -268,5 +285,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     public void gameOver() {
         gameThread.gameOver();
+        MainActivity activity = (MainActivity) getContext();
+        activity.startMenu();
     }
 }

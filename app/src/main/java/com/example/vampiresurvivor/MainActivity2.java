@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -90,7 +89,6 @@ public class MainActivity2 extends AppCompatActivity implements ViewTreeObserver
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
-
     }
 
     @Override
@@ -118,7 +116,6 @@ public class MainActivity2 extends AppCompatActivity implements ViewTreeObserver
 //        MediaPlayer mP = MediaPlayer.create(this, R.raw.vampire);
 //        mP.start();
         Rect rec = getDimensionsFinestra();
-        Log.d("anim","Amplada: " + rec.width() + " Alçada: " + rec.height());
         //Objecte que fa aparèixer el vampir
         ObjectAnimator animVampireIn = ObjectAnimator.ofFloat(imvVampire, "alpha", 0.0f, 1.0f);
         //Objecte que fa aparèixer el títol vampire

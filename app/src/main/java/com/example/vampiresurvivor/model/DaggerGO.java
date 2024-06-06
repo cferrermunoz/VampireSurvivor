@@ -8,14 +8,12 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
-
 import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
 import com.example.vampiresurvivor.view.Utils;
 
 public class DaggerGO extends GameObject{
-    private static final int SPEED = 5;
+    private static final int SPEED = 12;
     private int Escala = 8;
     protected Point posSprite = new Point();
     private static Bitmap sprite;
@@ -28,10 +26,9 @@ public class DaggerGO extends GameObject{
         if (sprite == null) {
             Bitmap spriteA = BitmapFactory.decodeResource(gsv.getResources(), R.drawable.dagger);
             sprite = Bitmap.createScaledBitmap(spriteA, spriteA.getWidth() / getEscala(), spriteA.getHeight() / getEscala(), false);
-
         }
         if (hitbox == null) {
-            hitbox = new RectF(0,0,sprite.getWidth()+3,sprite.getHeight()+3);
+            hitbox = new RectF(0,0,sprite.getWidth()+15,sprite.getHeight()+15);
         }
         posSprite.x = gsv.getPlayerPosition().x;
         posSprite.y = gsv.getPlayerPosition().y;
@@ -58,7 +55,6 @@ public class DaggerGO extends GameObject{
     @Override
     public void paint(Canvas canvas) {
         canvas.save();
-
         Point posicioLocal = gsv.getScreenCoordinates(posSprite);
         canvas.rotate(angle, posicioLocal.x, posicioLocal.y);
         canvas.drawBitmap(sprite,
