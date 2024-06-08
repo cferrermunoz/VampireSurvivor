@@ -267,10 +267,14 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public boolean isWalkable(Point posicio){
-        if (!isInsideMap(posicio)) return false;
-        int y = posicio.y / MapGenerator.getTileSize();
-        int x = posicio.x / MapGenerator.getTileSize();
-        return map.getMap().getColor(x,y).equals(Color.valueOf(0,0,0));
+        try {
+            if (!isInsideMap(posicio)) return false;
+            int y = posicio.y / MapGenerator.getTileSize();
+            int x = posicio.x / MapGenerator.getTileSize();
+            return map.getMap().getColor(x,y).equals(Color.valueOf(0,0,0));
+        } catch (Exception e){
+            return false;
+        }
     }
 
 

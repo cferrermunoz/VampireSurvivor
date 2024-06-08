@@ -12,7 +12,6 @@ import com.example.vampiresurvivor.view.GameSurfaceView;
 
 public class GarlicGO extends SpriteGO{
     private int Escala = 4;
-    protected Point posSprite;
     public GarlicGO(GameSurfaceView gsv, Point pos) {
         super(gsv);
         sprites.put("garlic", new SpriteInfo(R.drawable.garlic, 1));
