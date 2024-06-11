@@ -66,10 +66,11 @@ public class BatGO extends SpriteGO {
     @Override
     public RectF getHitBox() {
         RectF h = super.getHitBox();
-        h.left += 10;
-        h.right -= 10;
-        h.top += 10;
-        h.bottom -= 10;
+        //make h bigger
+        h.left -= 40;
+        h.top -= 40;
+        h.right += 40;
+        h.bottom += 40;
         return h;
     }
 }

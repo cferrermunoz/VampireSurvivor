@@ -58,7 +58,7 @@ public class CharacterGO extends SpriteGO {
     /**
      * Comptador all
      */
-    private int sec_garlic = 300;
+    private int sec_garlic = 1200;
     /**
      * Radi de l'efecte de l'all
      */
@@ -227,7 +227,7 @@ public class CharacterGO extends SpriteGO {
 
     public void setGarlic(boolean b) {
         garlic = b;
-        this.sec_garlic = 60;
+        this.sec_garlic = 1200;
     }
 
     public boolean getGarlic() {

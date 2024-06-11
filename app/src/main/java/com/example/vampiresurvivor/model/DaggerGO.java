@@ -21,21 +21,17 @@ public class DaggerGO extends GameObject{
     private final PointF direction;
     private static RectF hitbox = null;
 
-    public DaggerGO(GameSurfaceView gsv) {
+    public DaggerGO(GameSurfaceView gsv, Point desti) {
         super(gsv);
         if (sprite == null) {
             Bitmap spriteA = BitmapFactory.decodeResource(gsv.getResources(), R.drawable.dagger);
             sprite = Bitmap.createScaledBitmap(spriteA, spriteA.getWidth() / getEscala(), spriteA.getHeight() / getEscala(), false);
         }
         if (hitbox == null) {
-            hitbox = new RectF(0,0,sprite.getWidth()+15,sprite.getHeight()+15);
+            hitbox = new RectF(0,0,sprite.getWidth()+40,sprite.getHeight()+40);
         }
         posSprite.x = gsv.getPlayerPosition().x;
         posSprite.y = gsv.getPlayerPosition().y;
-        int bats = gsv.getBats().size();
-        //get a random number
-        int bat = (int) (Math.random()*bats);
-        Point desti = gsv.getBats().get(bat).getPosition();
         direction = new PointF(desti.x-posSprite.x,desti.y-posSprite.y);
         double distancia = Utils.getModule(direction);
         direction.x = (float) (direction.x/distancia)*SPEED;
@@ -46,7 +42,7 @@ public class DaggerGO extends GameObject{
     public void update() {
         posSprite.x = (int) (posSprite.x+direction.x);
         posSprite.y = (int) (posSprite.y+direction.y);
-        hitbox = new RectF(posSprite.x-sprite.getWidth()/2, posSprite.y-sprite.getHeight()/2, posSprite.x+sprite.getWidth()/2, posSprite.y+sprite.getHeight()/2);
+        hitbox = new RectF(posSprite.x-150,posSprite.y-150,posSprite.x+150,posSprite.y+150);
         if(!gsv.isInsideMap(posSprite)){
             gsv.deleteDagger(this);
         }

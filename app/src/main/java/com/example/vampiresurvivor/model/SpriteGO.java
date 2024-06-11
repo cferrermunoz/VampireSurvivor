@@ -81,6 +81,7 @@ public abstract class SpriteGO extends GameObject {
     public RectF getHitBox(){
         return hitbox;
     }
+
     protected class SpriteInfo {
         private static final int MAX_COUNT = 3;
         public Bitmap sprite;

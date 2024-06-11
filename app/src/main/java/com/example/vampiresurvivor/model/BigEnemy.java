@@ -4,13 +4,14 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import com.example.vampiresurvivor.R;
 import com.example.vampiresurvivor.view.GameSurfaceView;
+import com.example.vampiresurvivor.view.Utils;
 
 
 public class BigEnemy extends SpriteGO{
     /**
      * Comptador per canviar la direcció
      */
-    private int count = 100000;
+    private int count = 1000;
     /**
      * Direcció de l'enemic
      */
@@ -19,6 +20,7 @@ public class BigEnemy extends SpriteGO{
      * Vida de l'enemic
      */
     private int life = 3;
+    private int speed = 5;
 
     /**
      * Constructor de l'enemic
@@ -29,9 +31,9 @@ public class BigEnemy extends SpriteGO{
         super(gsv);
         sprites.put("walk", new SpriteInfo(R.drawable.big_enemy, 4));
         setState("walk");
-        posSprite = posicion;
-        direction.x =  gsv.getRandomPoint().x;
-        direction.y =  gsv.getRandomPoint().y;
+        posSprite.x =  posicion.x;
+        posSprite.y =  posicion.y;
+        reassignDirection();
     }
     /**
      * Retorna l'escala
@@ -77,7 +79,11 @@ public class BigEnemy extends SpriteGO{
      */
     public void reassignDirection(){
         Point p = gsv.getRandomPoint();
-        direction = new PointF(p.x,p.y);
+        double distancia = Utils.getDistancia(posSprite, p);
+        if (distancia > 0) {
+            direction.x = (float) ((p.x - posSprite.x) / distancia * speed);
+            direction.y = (float) ((p.y - posSprite.y) / distancia * speed);
+        }
     }
 
     /**

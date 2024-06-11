@@ -57,8 +57,10 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         W = map.getScenario().getWidth();
         H = map.getScenario().getHeight();
         player = new CharacterGO(this);
-        mP_bat = MediaPlayer.create(context, R.raw.bat_sound);
+        mP_bat = MediaPlayer.create(context, R.raw.soundtrack);
         mP_dagger = MediaPlayer.create(context, R.raw.knife);
+        mP_bat.setLooping(true);
+        mP_bat.start();
     }
 
     public void pintar(){
@@ -79,10 +81,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         h = getHeight();
         gameThread = new GameThread(this);
         gameThread.start();
-        mP_bat.setDisplay(surfaceHolder);
-        if (mP_bat != null && !mP_bat.isPlaying()) {
-            mP_bat.start();
-        }
+
     }
 
     @Override
@@ -193,18 +192,48 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
         player.update();
         count++;
-        if (count%300 == 0){
+        if (count%100 == 0){
             vampires.add(new BigEnemy(this, getRandomPoint()));
-        } else if (count%150 == 0){
+        } else if (count%20 == 0){
             bats.add(new BatGO(this, getRandomPoint()));
-        } else if (count%200 == 0){
+        } else if (count%30 == 0){
             if (!vampires.isEmpty() || !bats.isEmpty()){
-                daggers.add(new DaggerGO(this));
-                if (mP_dagger != null && !mP_dagger.isPlaying()) {
-                    mP_dagger.start();
+                BigEnemy be = null;
+                BatGO bgo = null;
+                double minDist = Double.MAX_VALUE;
+                if (!vampires.isEmpty()){
+                    for (int i = 0; i<vampires.size(); i++){
+                        BigEnemy beaux = vampires.get(i);
+                        double dist = Utils.getDistancia(player.getPosition(), beaux.getPosition());
+                        if (dist < minDist){
+                            minDist = dist;
+                            be = beaux;
+                        }
+                    }
+                }
+                if (!bats.isEmpty()){
+                    for (int i = 0; i<bats.size(); i++){
+                        BatGO bgoaux = bats.get(i);
+                        double dist = Utils.getDistancia(player.getPosition(), bgoaux.getPosition());
+                        if (dist < minDist){
+                            minDist = dist;
+                            bgo = bgoaux;
+                        }
+                    }
+                }
+                if (be != null && bgo != null){
+                    if (Utils.getDistancia(player.getPosition(), bgo.getPosition()) > Utils.getDistancia(player.getPosition(), be.getPosition())){
+                        daggers.add(new DaggerGO(this, be.getPosition()));
+                    } else {
+                        daggers.add(new DaggerGO(this, bgo.getPosition()));
+                    }
+                } else if (be != null){
+                    daggers.add(new DaggerGO(this, be.getPosition()));
+                } else if (bgo != null){
+                    daggers.add(new DaggerGO(this, bgo.getPosition()));
                 }
             }
-        } else if (count%10 == 0){
+        } else if (count%600 == 0){
             lifes.add(new LifeGO(this, getRandomPoint()));
             Point pos = new Point((int) (Math.random()*W), (int) (Math.random()*H));
             Log.d("Garlic", pos.toString());
